@@ -7,7 +7,11 @@
 
 import os
 import Foundation
+#if canImport(Adjust)
+import Adjust
+#else
 import AdjustSdk
+#endif
 #if COCOAPODS
 import TealiumSwift
 #else

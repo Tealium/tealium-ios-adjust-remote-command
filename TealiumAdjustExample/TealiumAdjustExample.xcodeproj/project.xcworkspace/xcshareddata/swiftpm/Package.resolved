@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Adjust",
+        "repositoryURL": "https://github.com/adjust/ios_sdk",
+        "state": {
+          "branch": null,
+          "revision": "526e556b5a562e13fa4d65d106965a5faf59a2b7",
+          "version": "4.26.1"
+        }
+      },
+      {
+        "package": "TealiumAdjust",
+        "repositoryURL": "/Users/christina/Projects/work-repos/github/tealium-ios-adjust-remote-command",
+        "state": {
+          "branch": "dev",
+          "revision": "ab533d9777f3ffd2cc20197471aafcbc08b8e76e",
+          "version": null
+        }
+      },
+      {
+        "package": "TealiumSwift",
+        "repositoryURL": "https://github.com/tealium/tealium-swift",
+        "state": {
+          "branch": null,
+          "revision": "b8c8a64fd74a790c807c22eee4000b340f004eaf",
+          "version": "2.2.2"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

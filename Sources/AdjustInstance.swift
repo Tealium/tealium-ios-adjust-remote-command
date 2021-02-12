@@ -6,7 +6,11 @@
 //
 
 import Foundation
+#if canImport(Adjust)
+import Adjust
+#else
 import AdjustSdk
+#endif
 
 public protocol AdjustCommand {
     func initialize(with config: ADJConfig)
