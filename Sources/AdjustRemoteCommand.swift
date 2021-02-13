@@ -55,12 +55,11 @@ public class AdjustRemoteCommand: RemoteCommand {
                 return
         }
         let commands = command.split(separator: AdjustConstants.separator)
-        let AdjustCommands = commands.map { command in
+        let adjustCommands = commands.map { command in
             return command.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         }
         loggerLevel = logLevel
-        log("\(AdjustConstants.description) Initialized")
-        AdjustCommands.forEach {
+        adjustCommands.forEach {
             let command = AdjustConstants.Commands(rawValue: $0.lowercased())
             switch command {
             case .initialize:

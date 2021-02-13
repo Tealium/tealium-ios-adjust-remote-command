@@ -9,8 +9,20 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        TabView {
+            EventsView()
+                .tabItem {
+                    Label("Events", systemImage: "sparkle")
+                }
+            InAppPurchasesView()
+                .tabItem {
+                    Label("In-App Purchases", systemImage: "purchased.circle.fill")
+                }
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
+                }
+        }.accentColor(.tealBlue)
     }
 }
 
