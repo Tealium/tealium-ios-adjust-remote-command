@@ -6,10 +6,7 @@
 //
 
 import Foundation
-import TealiumCore
-import TealiumCollect
-import TealiumLifecycle
-import TealiumRemoteCommands
+import TealiumSwift
 import TealiumAdjust
 import Adjust
 
