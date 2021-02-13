@@ -3,13 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CF42369C25D7667F006D2771 /* TealiumAdjust in Frameworks */ = {isa = PBXBuildFile; productRef = CF42369B25D7667F006D2771 /* TealiumAdjust */; };
-		CF4236A025D76694006D2771 /* TealiumLifecycle in Frameworks */ = {isa = PBXBuildFile; productRef = CF42369F25D76694006D2771 /* TealiumLifecycle */; };
-		CF4236A225D76694006D2771 /* TealiumCollect in Frameworks */ = {isa = PBXBuildFile; productRef = CF4236A125D76694006D2771 /* TealiumCollect */; };
 		CFEBE0C325D70593006D3574 /* TealiumAdjustExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEBE0C225D70593006D3574 /* TealiumAdjustExampleApp.swift */; };
 		CFEBE0C525D70593006D3574 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEBE0C425D70593006D3574 /* ContentView.swift */; };
 		CFEBE0C725D70594006D3574 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFEBE0C625D70594006D3574 /* Assets.xcassets */; };
@@ -54,9 +51,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF4236A225D76694006D2771 /* TealiumCollect in Frameworks */,
-				CF42369C25D7667F006D2771 /* TealiumAdjust in Frameworks */,
-				CF4236A025D76694006D2771 /* TealiumLifecycle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,9 +138,6 @@
 			);
 			name = TealiumAdjustExample;
 			packageProductDependencies = (
-				CF42369B25D7667F006D2771 /* TealiumAdjust */,
-				CF42369F25D76694006D2771 /* TealiumLifecycle */,
-				CF4236A125D76694006D2771 /* TealiumCollect */,
 			);
 			productName = TealiumAdjustExample;
 			productReference = CFEBE0BF25D70593006D3574 /* TealiumAdjustExample.app */;
@@ -176,8 +167,6 @@
 			);
 			mainGroup = CFEBE0B625D70593006D3574;
 			packageReferences = (
-				CF42369A25D7667F006D2771 /* XCRemoteSwiftPackageReference "adj" */,
-				CF42369E25D76694006D2771 /* XCRemoteSwiftPackageReference "tealium-swift" */,
 			);
 			productRefGroup = CFEBE0C025D70593006D3574 /* Products */;
 			projectDirPath = "";
@@ -407,43 +396,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		CF42369A25D7667F006D2771 /* XCRemoteSwiftPackageReference "adj" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/christinasund/adj";
-			requirement = {
-				branch = dev;
-				kind = branch;
-			};
-		};
-		CF42369E25D76694006D2771 /* XCRemoteSwiftPackageReference "tealium-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/tealium/tealium-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.2.2;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		CF42369B25D7667F006D2771 /* TealiumAdjust */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CF42369A25D7667F006D2771 /* XCRemoteSwiftPackageReference "adj" */;
-			productName = TealiumAdjust;
-		};
-		CF42369F25D76694006D2771 /* TealiumLifecycle */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CF42369E25D76694006D2771 /* XCRemoteSwiftPackageReference "tealium-swift" */;
-			productName = TealiumLifecycle;
-		};
-		CF4236A125D76694006D2771 /* TealiumCollect */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CF42369E25D76694006D2771 /* XCRemoteSwiftPackageReference "tealium-swift" */;
-			productName = TealiumCollect;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CFEBE0B725D70593006D3574 /* Project object */;
 }
