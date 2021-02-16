@@ -1,0 +1,62 @@
+{
+  "config": {
+    "api_token": "<your_token_here>",
+    "sandbox": true,
+    "settings": {
+      "log_level": "info",
+      "delay_start": 1.0,
+      "allow_iad": true,
+      "allow_ad_services": true,
+      "allow_idfa": true,
+      "app_secret" : "secret123",
+      "app_secret_info_1" : "123",
+      "app_secret_info_2" : "456",
+      "app_secret_info_3" : "789",
+      "app_secret_info_4" : "012",
+      "event_buffering_enabled": true,
+      "send_in_background": true
+    }
+  },
+  "mappings": {
+    "event_token": "event_token",
+    "order_total": "revenue,callback.orderTotal",
+    "order_currency": "currency",
+    "order_id": "order_id, callback.orderId",
+    "conversion_value": "conversion_value",
+    "sales_region": "sales_region",
+    "callback_id": "callback_id",
+    "ad_revenue_source": "ad_revenue_source",
+    "campaign": "ad_revenue_payload.campaignId",
+    "ad_uuid": "ad_revenue_payload.adId",
+    "appstore_receipt_data": "receipt",
+    "purchase_timestamp": "purchase_time",
+    "deeplink_url": "deeplink_open_url",
+    "push_token": "push_token",
+    "favorite_color": "callback.color,session_callback.color",
+    "num_of_pets": "partner.pets,session_partner.pets",
+    "customer_id": "callback.customerId",
+    "customer_is_member": "partner.isMember",
+    "session_params": "session_callback,session_partner",
+    "remove_session_params": "remove_session_callback_params,remove_session_partner_params",
+    "reset_session_params": "reset_session_callback_params,reset_session_partner_params",
+    "consent_granted": "measurement_consent",
+    "enabled": "enabled"
+  },
+  "commands": {
+    "launch": "initialize",
+    "track_deeplink": "appwillopenurl",
+    "purchase": "trackevent,updateconversionvalue",
+    "event": "trackevent",
+    "contact": "trackevent,addsessioncallbackparams,addsessionpartnerparams",
+    "ad_revenue": "trackadrevenue",
+    "subscribe": "trackevent,tracksubscription",
+    "received_push_token": "setpushtoken",
+    "add_session_parameters": "addsessioncallbackparams,addsessionpartnerparams",
+    "remove_session_parameters": "removesessioncallbackparams,removesessionpartnerparams",
+    "reset_session_parameters": "resetsessioncallbackparams,resetsessionpartnerparams",
+    "consent_revoked": "gdprforgetme,trackmeasurementconsent",
+    "consent_granted": "trackmeasurementconsent",
+    "set_enabled": "setenabled",
+    "offline": "setofflinemode"
+  }
+}
