@@ -1,0 +1,3 @@
+git "file:///Users/christina/Projects/work-repos/github/tealium-ios-adjust-remote-command" "list"
+github "adjust/ios_sdk" "v4.29.1"
+github "tealium/tealium-swift" "2.3.0"

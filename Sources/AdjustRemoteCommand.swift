@@ -213,6 +213,9 @@ public class AdjustRemoteCommand: RemoteCommand {
         if let sendInBackground = settings[AdjustConstants.Keys.sendInBackground] as? Bool {
             config.sendInBackground = sendInBackground
         }
+        if let residency = settings[AdjustConstants.Keys.urlStrategy] as? String {
+            config.urlStrategy = residency
+        }
         config.allowiAdInfoReading = settings[AdjustConstants.Keys.allowiAdInfoReading] as? Bool ?? false
         config.allowAdServicesInfoReading = settings[AdjustConstants.Keys.allowAdServicesInfoReading] as? Bool ?? false
         config.allowIdfaReading = settings[AdjustConstants.Keys.allowIdfaReading] as? Bool ?? false

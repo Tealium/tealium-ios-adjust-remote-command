@@ -32,6 +32,6 @@ Pod::Spec.new do |s|
     # ――― Dependencies ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
     s.ios.dependency 'tealium-swift/Core', '~> 2.3'
     s.ios.dependency 'tealium-swift/RemoteCommands', '~> 2.3'
-    s.ios.dependency 'Adjust', '~> 4.6'
+    s.ios.dependency 'Adjust', '~> 4.2'
 
 end

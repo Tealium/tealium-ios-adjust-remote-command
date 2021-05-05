@@ -50,7 +50,8 @@ class TealiumAdjustTests: XCTestCase {
                                        AdjustConstants.Keys.sendInBackground: true,
                                        AdjustConstants.Keys.allowiAdInfoReading: true,
                                        AdjustConstants.Keys.allowAdServicesInfoReading: true,
-                                       AdjustConstants.Keys.allowIdfaReading: true]
+                                       AdjustConstants.Keys.allowIdfaReading: true,
+                                       AdjustConstants.Keys.urlStrategy: "url_strategy_china"]
         
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
                                                         "api_token": "test_api_token",
@@ -64,6 +65,7 @@ class TealiumAdjustTests: XCTestCase {
         XCTAssertTrue(adjInstance.adjConfig!.allowiAdInfoReading)
         XCTAssertTrue(adjInstance.adjConfig!.allowAdServicesInfoReading)
         XCTAssertTrue(adjInstance.adjConfig!.allowIdfaReading)
+        XCTAssertEqual(adjInstance.adjConfig!.urlStrategy, "url_strategy_china")
     }
     
     func testInitialize_SetsLogLevel() {

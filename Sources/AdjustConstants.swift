@@ -75,6 +75,7 @@ public enum AdjustConstants {
         static let removeSessionPartnerParameters = "remove_session_partner_params"
         static let adRevenueSource = "ad_revenue_source"
         static let adRevenuePayload = "ad_revenue_payload"
+        static let urlStrategy = "url_strategy"
     }
     
 }

@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.3.2 (swiftlang-1200.0.45 clang-1200.0.32.28)
+// swift-compiler-version: Apple Swift version 5.4 (swiftlang-1205.0.26.9 clang-1205.0.19.55)
 // swift-module-flags: -target arm64-apple-ios9.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name TealiumCore
 import CoreTelephony
 import Darwin
@@ -100,10 +100,10 @@ public enum LifecycleType {
     get
   }
   public static func == (a: TealiumCore.LifecycleType, b: TealiumCore.LifecycleType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
   public var hashValue: Swift.Int {
     get
   }
-  public func hash(into hasher: inout Swift.Hasher)
 }
 final public class AtomicInteger {
   public init(value initialValue: Swift.Int = 0)
@@ -322,10 +322,10 @@ public enum TealiumLogCategory {
   case track
   case general
   public static func == (a: TealiumCore.TealiumLogCategory, b: TealiumCore.TealiumLogCategory) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
   public var hashValue: Swift.Int {
     get
   }
-  public func hash(into hasher: inout Swift.Hasher)
 }
 public struct TealiumLogRequest : TealiumCore.LogRequest {
   public var messages: [Swift.String]
@@ -345,8 +345,8 @@ extension DeviceData {
     case kilobyte
     case megabyte
     case gigabyte
-    public typealias RawValue = Swift.Double
     public init?(rawValue: Swift.Double)
+    public typealias RawValue = Swift.Double
     public var rawValue: Swift.Double {
       get
     }
@@ -476,8 +476,8 @@ public enum TealiumLogLevel : Swift.Int, Swift.Comparable, Swift.CustomStringCon
     get
   }
   public static func < (lhs: TealiumCore.TealiumLogLevel, rhs: TealiumCore.TealiumLogLevel) -> Swift.Bool
-  public typealias RawValue = Swift.Int
   public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
   public var rawValue: Swift.Int {
     get
   }
@@ -516,9 +516,9 @@ public struct UserConsentPreferences : Swift.Equatable, Swift.Codable {
   public mutating func setConsentStatus(_ status: TealiumCore.TealiumConsentStatus)
   public mutating func setConsentCategories(_ categories: [TealiumCore.TealiumConsentCategories])
   public mutating func resetConsentCategories()
-  public init(from decoder: Swift.Decoder) throws
   public static func == (a: TealiumCore.UserConsentPreferences, b: TealiumCore.UserConsentPreferences) -> Swift.Bool
   public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
 }
 extension TealiumConfig {
   public var dispatchAfter: Swift.Int {
@@ -564,8 +564,8 @@ public protocol ConsentConfigurable {
   }
   @objc required public init?(coder: Foundation.NSCoder)
   @objc public func encode(with: Foundation.NSCoder)
-  @objc deinit
   @objc override dynamic public init()
+  @objc deinit
 }
 open class TealiumConfig {
   final public let account: Swift.String
@@ -727,8 +727,8 @@ public enum TealiumConsentCategories : Swift.String, Swift.Codable {
   public static var all: [TealiumCore.TealiumConsentCategories] {
     get
   }
-  public typealias RawValue = Swift.String
   public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
   }
@@ -742,8 +742,8 @@ public enum TealiumConsentStatus : Swift.String, Swift.Codable {
   case unknown
   case consented
   case notConsented
-  public typealias RawValue = Swift.String
   public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
   }
@@ -752,11 +752,11 @@ public enum TealiumConsentTrackAction : Swift.Equatable {
   case trackingAllowed
   case trackingForbidden
   case trackingQueued
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: TealiumCore.TealiumConsentTrackAction, b: TealiumCore.TealiumConsentTrackAction) -> Swift.Bool
   public var hashValue: Swift.Int {
     get
   }
-  public func hash(into hasher: inout Swift.Hasher)
-  public static func == (a: TealiumCore.TealiumConsentTrackAction, b: TealiumCore.TealiumConsentTrackAction) -> Swift.Bool
 }
 extension TealiumConsentStatus {
   public init(integer: Swift.Int)
@@ -791,8 +791,8 @@ public enum NetworkError : Swift.String, Foundation.LocalizedError {
   public var errorDescription: Swift.String? {
     get
   }
-  public typealias RawValue = Swift.String
   public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
   }
@@ -813,10 +813,10 @@ public enum RefreshTime {
   case minutes
   case hours
   public static func == (a: TealiumCore.RefreshTime, b: TealiumCore.RefreshTime) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
   public var hashValue: Swift.Int {
     get
   }
-  public func hash(into hasher: inout Swift.Hasher)
 }
 public enum TealiumRefreshInterval {
   case every(Swift.Int, TealiumCore.RefreshTime)
@@ -965,17 +965,17 @@ public enum TealiumTrackType {
   case view
   case event
   public static func == (a: TealiumCore.TealiumTrackType, b: TealiumCore.TealiumTrackType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
   public var hashValue: Swift.Int {
     get
   }
-  public func hash(into hasher: inout Swift.Hasher)
 }
 public typealias TealiumCompletion = ((Swift.Bool, [Swift.String : Any]?, Swift.Error?) -> Swift.Void)
 public enum HttpStatusCodes : Swift.Int {
   case notModified
   case ok
-  public typealias RawValue = Swift.Int
   public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
   public var rawValue: Swift.Int {
     get
   }
@@ -1203,10 +1203,10 @@ public enum TimeUnit {
     get
   }
   public static func == (a: TealiumCore.TimeUnit, b: TealiumCore.TimeUnit) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
   public var hashValue: Swift.Int {
     get
   }
-  public func hash(into hasher: inout Swift.Hasher)
 }
 public struct PersistentAppData : Swift.Codable {
   public var visitorId: Swift.String
@@ -1215,8 +1215,8 @@ public struct PersistentAppData : Swift.Codable {
     get
   }
   public static func new(from existingData: [Swift.String : Any]) -> TealiumCore.PersistentAppData?
-  public init(from decoder: Swift.Decoder) throws
   public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
 }
 public struct TimedEventTrigger {
   public init(start: Swift.String, end: Swift.String, name: Swift.String? = nil)
@@ -1294,10 +1294,10 @@ public enum SessionError : Foundation.LocalizedError {
     get
   }
   public static func == (a: TealiumCore.SessionError, b: TealiumCore.SessionError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
   public var hashValue: Swift.Int {
     get
   }
-  public func hash(into hasher: inout Swift.Hasher)
 }
 public struct CompressionLevel : Swift.RawRepresentable {
   public let rawValue: Swift.Int32

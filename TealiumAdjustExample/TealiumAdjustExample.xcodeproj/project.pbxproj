@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		794DCDFBEF5089E6E804ADF5 /* Pods_TealiumAdjustExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68EFE042ED58736163CA1A62 /* Pods_TealiumAdjustExample.framework */; };
 		CFEBE0C325D70593006D3574 /* TealiumAdjustExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEBE0C225D70593006D3574 /* TealiumAdjustExampleApp.swift */; };
 		CFEBE0C525D70593006D3574 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEBE0C425D70593006D3574 /* ContentView.swift */; };
 		CFEBE0C725D70594006D3574 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFEBE0C625D70594006D3574 /* Assets.xcassets */; };
@@ -32,7 +31,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		68EFE042ED58736163CA1A62 /* Pods_TealiumAdjustExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TealiumAdjustExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF5ABABA25DC9A1900FEB1D6 /* AdjustSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdjustSdk.framework; path = Carthage/Build/iOS/AdjustSdk.framework; sourceTree = "<group>"; };
 		CF5ABABB25DC9A1900FEB1D6 /* TealiumRemoteCommands.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TealiumRemoteCommands.framework; path = Carthage/Build/iOS/TealiumRemoteCommands.framework; sourceTree = "<group>"; };
 		CF5ABABC25DC9A1900FEB1D6 /* TealiumCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TealiumCore.framework; path = Carthage/Build/iOS/TealiumCore.framework; sourceTree = "<group>"; };
@@ -75,7 +73,6 @@
 				D747D5C5261209B80050244A /* AdSupport.framework in Frameworks */,
 				D747D5C6261209B80050244A /* AdServices.framework in Frameworks */,
 				D747D5C7261209B80050244A /* iAd.framework in Frameworks */,
-				794DCDFBEF5089E6E804ADF5 /* Pods_TealiumAdjustExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,7 +93,6 @@
 				CF5ABABA25DC9A1900FEB1D6 /* AdjustSdk.framework */,
 				CF5ABABC25DC9A1900FEB1D6 /* TealiumCore.framework */,
 				CF5ABABB25DC9A1900FEB1D6 /* TealiumRemoteCommands.framework */,
-				68EFE042ED58736163CA1A62 /* Pods_TealiumAdjustExample.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -174,11 +170,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CFEBE0CE25D70594006D3574 /* Build configuration list for PBXNativeTarget "TealiumAdjustExample" */;
 			buildPhases = (
-				8E1D5F60D547A0FCF012961C /* [CP] Check Pods Manifest.lock */,
 				CFEBE0BB25D70593006D3574 /* Sources */,
 				CFEBE0BC25D70593006D3574 /* Frameworks */,
 				CFEBE0BD25D70593006D3574 /* Resources */,
-				FE8FBD6EF382474C79BD64ED /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -233,48 +227,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		8E1D5F60D547A0FCF012961C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TealiumAdjustExample-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		FE8FBD6EF382474C79BD64ED /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TealiumAdjustExample/Pods-TealiumAdjustExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TealiumAdjustExample/Pods-TealiumAdjustExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TealiumAdjustExample/Pods-TealiumAdjustExample-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CFEBE0BB25D70593006D3574 /* Sources */ = {

@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.3.2 (swiftlang-1200.0.45 clang-1200.0.32.28)
+// swift-compiler-version: Apple Swift version 5.4 (swiftlang-1205.0.26.9 clang-1205.0.19.55)
 // swift-module-flags: -target arm64-apple-ios9.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name TealiumRemoteCommands
 import Foundation
 import Swift
@@ -44,8 +44,8 @@ public class RemoteCommandResponse : TealiumRemoteCommands.RemoteCommandResponse
   public func trigger(command type: TealiumRemoteCommands.SimpleCommandType, with data: [Swift.String : Any], completion: TealiumCore.ModuleCompletion?)
   @discardableResult
   public func triggerCommand(from request: Foundation.URLRequest) -> TealiumRemoteCommands.TealiumRemoteCommandsError?
-  @objc deinit
   @objc override dynamic public init()
+  @objc deinit
 }
 extension RemoteCommandsManager : TealiumRemoteCommands.RemoteCommandDelegate {
   public func remoteCommandRequestsExecution(_ command: TealiumRemoteCommands.RemoteCommandProtocol, response: TealiumRemoteCommands.RemoteCommandResponseProtocol)
@@ -84,10 +84,10 @@ public enum SimpleCommandType {
   case webview
   case JSON
   public static func == (a: TealiumRemoteCommands.SimpleCommandType, b: TealiumRemoteCommands.SimpleCommandType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
   public var hashValue: Swift.Int {
     get
   }
-  public func hash(into hasher: inout Swift.Hasher)
 }
 public enum TealiumRemoteCommandsError : Swift.Error, Swift.Equatable {
   case invalidScheme
@@ -105,11 +105,11 @@ public enum TealiumRemoteCommandsError : Swift.Error, Swift.Equatable {
   case noResponse
   case invalidResponse
   case notModified
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: TealiumRemoteCommands.TealiumRemoteCommandsError, b: TealiumRemoteCommands.TealiumRemoteCommandsError) -> Swift.Bool
   public var hashValue: Swift.Int {
     get
   }
-  public func hash(into hasher: inout Swift.Hasher)
-  public static func == (a: TealiumRemoteCommands.TealiumRemoteCommandsError, b: TealiumRemoteCommands.TealiumRemoteCommandsError) -> Swift.Bool
 }
 public struct RemoteCommandConfig : Swift.Codable {
   public init(config: [Swift.String : Any], mappings: [Swift.String : Swift.String], apiCommands: [Swift.String : Swift.String], commandName: Swift.String?, commandURL: Foundation.URL?)
@@ -164,8 +164,8 @@ public class RemoteCommandsModule : TealiumCore.Dispatcher {
   public class func create(with delegate: TealiumCore.ModuleDelegate?) -> TealiumRemoteCommands.RemoteCommandProtocol
   public class func httpRequest(from payload: [Swift.String : Any]) -> (request: Foundation.URLRequest?, error: Swift.Error?)
   public class func queryItems(from dictionary: [Swift.String : Any]) -> [Foundation.URLQueryItem]
-  @objc deinit
   override public init(commandId: Swift.String, description: Swift.String?, type: TealiumRemoteCommands.RemoteCommandType = super, completion: @escaping (TealiumRemoteCommands.RemoteCommandResponseProtocol) -> Swift.Void)
+  @objc deinit
 }
 public protocol TealiumRegistration {
   func registerPushToken(_ token: Swift.String)
