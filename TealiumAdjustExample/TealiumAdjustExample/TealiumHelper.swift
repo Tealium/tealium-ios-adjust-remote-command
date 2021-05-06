@@ -10,7 +10,7 @@ import TealiumSwift
 import TealiumAdjust
 import AdSupport
 import iAd
-import AdjustSdk
+import Adjust
 
 enum TealiumConfiguration {
     static let account = "tealiummobile"

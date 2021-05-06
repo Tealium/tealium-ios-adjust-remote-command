@@ -14,7 +14,8 @@
       "app_secret_info_3" : "789",
       "app_secret_info_4" : "012",
       "event_buffering_enabled": false,
-      "send_in_background": true
+      "send_in_background": true,
+      "url_strategy": "<your url strategy>"
     }
   },
   "mappings": {
