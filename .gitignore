@@ -53,6 +53,7 @@ Temporary Items
 ### Xcode ###
 .build
 *xcuserdata*
+*.swiftpm
 
 ## Pods
 TealiumAdjustExample/Pods/
