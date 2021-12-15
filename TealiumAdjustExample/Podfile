@@ -7,7 +7,7 @@ target 'TealiumAdjustExample' do
 
   # Pods for TealiumAdjustExample
   pod 'TealiumAdjust', :path=> '../'
-  pod 'tealium-swift/Collect', '~> 2.3'
-  pod 'tealium-swift/Lifecycle', '~> 2.3'
-  pod 'tealium-swift/Attribution', '~> 2.3'
+  pod 'tealium-swift/Collect', '~> 2.6'
+  pod 'tealium-swift/Lifecycle', '~> 2.6'
+  pod 'tealium-swift/Attribution', '~> 2.6'
 end

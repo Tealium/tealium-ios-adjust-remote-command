@@ -21,6 +21,9 @@ import TealiumRemoteCommands
 
 public class AdjustRemoteCommand: RemoteCommand {
     
+    public override var version: String {
+        return AdjustConstants.version
+    }
     var adjustInstance: AdjustCommand?
     private var loggerLevel: TealiumLogLevel = .error
     public weak var adjustDelegate: (AdjustDelegate & NSObjectProtocol)?
@@ -298,7 +301,7 @@ public class AdjustRemoteCommand: RemoteCommand {
     
     private var logLevel: TealiumLogLevel {
         guard let tealium = TealiumInstanceManager.shared.tealiumInstances.first?.value,
-              let environment = tealium.dataLayer.all[TealiumKey.environment] as? String else {
+              let environment = tealium.dataLayer.all[TealiumDataKey.environment] as? String else {
             return .error
         }
        return environment == "prod" ? TealiumLogLevel(from: "error") : TealiumLogLevel(from: "info")
