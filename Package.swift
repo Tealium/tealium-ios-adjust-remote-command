@@ -10,7 +10,7 @@ let package = Package(
         .library(name: "TealiumAdjust", targets: ["TealiumAdjust"])
     ],
     dependencies: [
-        .package(url: "https://github.com/tealium/tealium-swift", from: "2.2.0"),
+        .package(url: "https://github.com/tealium/tealium-swift", from: "2.6.0"),
         .package(url: "https://github.com/adjust/ios_sdk", from: "4.6.0")
     ],
     targets: [
