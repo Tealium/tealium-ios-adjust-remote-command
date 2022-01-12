@@ -55,12 +55,12 @@
 		15F76D40278C8CC700C977A5 /* TealiumRemoteCommands.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TealiumRemoteCommands.xcframework; path = Carthage/Build/TealiumRemoteCommands.xcframework; sourceTree = "<group>"; };
 		15F76D41278C8CC700C977A5 /* TealiumCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TealiumCore.xcframework; path = Carthage/Build/TealiumCore.xcframework; sourceTree = "<group>"; };
 		15F76D44278C8CD200C977A5 /* AdjustSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdjustSdk.framework; path = Carthage/Build/iOS/AdjustSdk.framework; sourceTree = "<group>"; };
+		15F93265278EE9B700DCCEAF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		15F93268278EE9C800DCCEAF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF3DF73E25D4558900CEC8C5 /* TealiumAdjust.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TealiumAdjust.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF3DF76025D455E700CEC8C5 /* TealiumAdjust.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TealiumAdjust.h; sourceTree = "<group>"; };
-		CF3DF76125D455E700CEC8C5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF3DF7A825D4995800CEC8C5 /* TealiumAdjustTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TealiumAdjustTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF3DF7AA25D4995800CEC8C5 /* TealiumAdjustTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TealiumAdjustTests.swift; sourceTree = "<group>"; };
-		CF3DF7AC25D4995800CEC8C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF3DF7B725D49A0100CEC8C5 /* AdjustInstance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdjustInstance.swift; sourceTree = "<group>"; };
 		CF3DF7B825D49A0100CEC8C5 /* AdjustConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdjustConstants.swift; sourceTree = "<group>"; };
 		CF3DF7B925D49A0100CEC8C5 /* AdjustRemoteCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdjustRemoteCommand.swift; sourceTree = "<group>"; };
@@ -89,6 +89,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		15F93264278EE9B700DCCEAF /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				15F93265278EE9B700DCCEAF /* Info.plist */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		15F93267278EE9C800DCCEAF /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				15F93268278EE9C800DCCEAF /* Info.plist */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
 		CF3DF73425D4558900CEC8C5 = {
 			isa = PBXGroup;
 			children = (
@@ -111,11 +127,11 @@
 		CF3DF75F25D455E700CEC8C5 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				15F93264278EE9B700DCCEAF /* Support */,
 				CF3DF7B825D49A0100CEC8C5 /* AdjustConstants.swift */,
 				CF3DF7B725D49A0100CEC8C5 /* AdjustInstance.swift */,
 				CF3DF7B925D49A0100CEC8C5 /* AdjustRemoteCommand.swift */,
 				CF3DF76025D455E700CEC8C5 /* TealiumAdjust.h */,
-				CF3DF76125D455E700CEC8C5 /* Info.plist */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -133,9 +149,9 @@
 		CF3DF7A925D4995800CEC8C5 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				15F93267278EE9C800DCCEAF /* Support */,
 				CF3DF7AA25D4995800CEC8C5 /* TealiumAdjustTests.swift */,
 				CF3DF7C125D5D71200CEC8C5 /* MockAdjustInstance.swift */,
-				CF3DF7AC25D4995800CEC8C5 /* Info.plist */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -416,7 +432,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/**",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = Sources/Info.plist;
+				INFOPLIST_FILE = Sources/Support/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -451,7 +467,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = Sources/Info.plist;
+				INFOPLIST_FILE = Sources/Support/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -479,7 +495,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = Tests/Info.plist;
+				INFOPLIST_FILE = Tests/Support/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -505,7 +521,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = Tests/Info.plist;
+				INFOPLIST_FILE = Tests/Support/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
