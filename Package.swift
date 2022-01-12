@@ -11,7 +11,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "TealiumSwift", url: "https://github.com/tealium/tealium-swift", .upToNextMajor(from: "2.6.0")),
-        .package(name: "Adjust", url: "https://github.com/adjust/ios_sdk", .upToNextMajor(from: "4.6.0"))
+        .package(name: "Adjust", url: "https://github.com/adjust/ios_sdk", .upToNextMajor(from: "4.29.0"))
     ],
     targets: [
         .target(

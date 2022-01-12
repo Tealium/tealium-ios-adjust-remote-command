@@ -7,7 +7,12 @@
 
 import Foundation
 @testable import TealiumAdjust
+#if canImport(Adjust)
+@testable import Adjust
+#else
 @testable import AdjustSdk
+#endif
+
 
 class MockAdjustDelegateClass: NSObject, AdjustDelegate {
     

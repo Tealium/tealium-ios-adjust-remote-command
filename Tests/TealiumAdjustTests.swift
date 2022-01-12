@@ -7,7 +7,11 @@
 
 import XCTest
 @testable import TealiumAdjust
+#if canImport(Adjust)
+@testable import Adjust
+#else
 @testable import AdjustSdk
+#endif
 
 class TealiumAdjustTests: XCTestCase {
 
