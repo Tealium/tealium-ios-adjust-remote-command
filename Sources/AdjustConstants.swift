@@ -12,7 +12,7 @@ public enum AdjustConstants {
     static let commandName = "command_name"
     static let separator: Character = ","
     static let commandId = "adjust"
-    static let version = "1.1.0"
+    static let version = "1.2.0"
     static let description = "Adjust Remote Command"
     
     enum Commands: String {
