@@ -144,11 +144,13 @@ public class AdjustRemoteCommand: RemoteCommand {
             case .gdprForgetMe:
                 adjustInstance.gdprForgetMe()
             case .setThirdPartySharing:
-                guard let enabled = payload[AdjustConstants.Keys.enabled] as? Bool else {
-                    log("\(AdjustConstants.Keys.enabled) required")
+                let enabled = payload[AdjustConstants.Keys.enabled] as? Bool
+                let granularOptions = payload[AdjustConstants.Keys.thirdPartySharingOptions] as? [String: [String: String]]
+                if (enabled == nil && granularOptions == nil) {
+                    log("\(AdjustConstants.Keys.enabled) or \(AdjustConstants.Keys.thirdPartySharingOptions) required")
                     return
                 }
-                adjustInstance.trackThirdPartySharing(enabled: enabled)
+                adjustInstance.trackThirdPartySharing(enabled: enabled, options: granularOptions)
             case .trackMeasurementConsent:
                 guard let consented = payload[AdjustConstants.Keys.measurementConsent] as? Bool else {
                     log("\(AdjustConstants.Keys.measurementConsent) required")

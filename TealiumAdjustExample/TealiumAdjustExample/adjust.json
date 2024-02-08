@@ -41,7 +41,8 @@
     "remove_session_params": "remove_session_callback_params,remove_session_partner_params",
     "reset_session_params": "reset_session_callback_params,reset_session_partner_params",
     "consent_granted": "measurement_consent",
-    "enabled": "enabled"
+    "enabled": "enabled",
+    "sharing_options": "third_party_sharing_options"
   },
   "commands": {
     "launch": "initialize",
@@ -58,6 +59,7 @@
     "consent_revoked": "gdprforgetme,trackmeasurementconsent",
     "consent_granted": "trackmeasurementconsent",
     "set_enabled": "setenabled",
-    "offline": "setofflinemode"
+    "offline": "setofflinemode",
+    "third_party_sharing": "setthirdpartysharing"
   }
 }

@@ -24,7 +24,7 @@ public protocol AdjustCommand {
     func setEnabled(_ enabled: Bool)
     func setOfflineMode(enabled: Bool)
     func gdprForgetMe()
-    func trackThirdPartySharing(enabled: Bool)
+    func trackThirdPartySharing(enabled: Bool?, options: [String: [String: String]]?)
     func trackMeasurementConsent(consented: Bool)
     func addSessionCallbackParams(_ params: [String: String])
     func removeSessionCallbackParams(_ paramNames: [String])
@@ -98,9 +98,17 @@ public class AdjustInstance: AdjustCommand {
         Adjust.gdprForgetMe()
     }
     
-    public func trackThirdPartySharing(enabled: Bool) {
-        guard let adjThirdPartySharing = ADJThirdPartySharing(isEnabledNumberBool: enabled ? 1 : 0) else {
+    public func trackThirdPartySharing(enabled: Bool?, options: [String: [String: String]]?) {
+        guard let adjThirdPartySharing = ADJThirdPartySharing(isEnabledNumberBool: enabled.map { $0 ? 1 : 0 } ) else {
             return
+        }
+        
+        if let options = options {
+            options.forEach { (partner, partnerOpts) in
+                partnerOpts.forEach { (key, value) in
+                    adjThirdPartySharing.addGranularOption(partner, key: key, value: value)
+                }
+            }
         }
         Adjust.trackThirdPartySharing(adjThirdPartySharing)
     }

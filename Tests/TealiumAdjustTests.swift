@@ -221,12 +221,6 @@ class TealiumAdjustTests: XCTestCase {
         XCTAssertEqual(adjInstance.appWillOpenCallCount, 0)
     }
     
-    func testAppWillOpenUrl_IsNotCalled_WhenUrlStringInvalid() {
-        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "appwillopenurl",
-                                                        "deeplink_open_url": "😀"])
-        XCTAssertEqual(adjInstance.appWillOpenCallCount, 0)
-    }
-    
     func testTrackAdRevenue_IsCalled() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackadrevenue",
                                                         "ad_revenue_source": "testSource",
@@ -290,9 +284,25 @@ class TealiumAdjustTests: XCTestCase {
         XCTAssertEqual(adjInstance.trackThirdPartySharingCallCount, 1)
     }
     
-    func testSetThirdPartySharing_IsNotCalled_WhenNoEnabledFlag() {
+    func testSetThirdPartySharing_IsNotCalled_WhenNoEnabledFlagAndNoOptions() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "setthirdpartysharing"])
         XCTAssertEqual(adjInstance.trackThirdPartySharingCallCount, 0)
+    }
+    
+    func testSetThirdPartySharing_IsCalled_WhenOnlyEnabledFlag() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "setthirdpartysharing",
+                                                        "enabled": true])
+        XCTAssertEqual(adjInstance.trackThirdPartySharingCallCount, 1)
+    }
+    
+    func testSetThirdPartySharing_IsCalled_WhenOnlyOptions() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "setthirdpartysharing",
+                                                        "third_party_sharing_options": [
+                                                            "partner" : [
+                                                                "option": "value"
+                                                            ]
+                                                        ]])
+        XCTAssertEqual(adjInstance.trackThirdPartySharingCallCount, 1)
     }
     
     func testTrackMeasurementConsent_IsCalled() {

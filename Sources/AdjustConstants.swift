@@ -77,6 +77,7 @@ public enum AdjustConstants {
         static let adRevenueSource = "ad_revenue_source"
         static let adRevenuePayload = "ad_revenue_payload"
         static let urlStrategy = "url_strategy"
+        static let thirdPartySharingOptions = "third_party_sharing_options"
     }
     
 }

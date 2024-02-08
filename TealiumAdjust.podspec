@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
     # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
     s.name         = "TealiumAdjust"
     s.module_name  = "TealiumAdjust"
-    s.version      = "1.1.0"
+    s.version      = "1.2.0"
     s.summary      = "Tealium Swift and Adjust integration"
     s.description  = <<-DESC
     Tealium's integration with Adjust for iOS.
