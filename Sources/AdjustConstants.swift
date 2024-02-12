@@ -47,7 +47,6 @@ public enum AdjustConstants {
         static let secretInfoFour = "app_secret_info_4"
         static let logLevel = "log_level"
         static let delayStart = "delay_start"
-        static let allowiAdInfoReading = "allow_iad"
         static let allowAdServicesInfoReading = "allow_ad_services"
         static let allowIdfaReading = "allow_idfa"
         static let isSKAdNetworkHandlingActive = "sk_ad_network_active"

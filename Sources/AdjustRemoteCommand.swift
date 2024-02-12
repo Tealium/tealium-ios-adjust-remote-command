@@ -146,7 +146,7 @@ public class AdjustRemoteCommand: RemoteCommand {
             case .setThirdPartySharing:
                 let enabled = payload[AdjustConstants.Keys.enabled] as? Bool
                 let granularOptions = payload[AdjustConstants.Keys.thirdPartySharingOptions] as? [String: [String: String]]
-                if (enabled == nil && granularOptions == nil) {
+                guard enabled != nil || granularOptions != nil else {
                     log("\(AdjustConstants.Keys.enabled) or \(AdjustConstants.Keys.thirdPartySharingOptions) required")
                     return
                 }
@@ -221,7 +221,6 @@ public class AdjustRemoteCommand: RemoteCommand {
         if let residency = settings[AdjustConstants.Keys.urlStrategy] as? String {
             config.urlStrategy = residency
         }
-        config.allowiAdInfoReading = settings[AdjustConstants.Keys.allowiAdInfoReading] as? Bool ?? false
         config.allowAdServicesInfoReading = settings[AdjustConstants.Keys.allowAdServicesInfoReading] as? Bool ?? false
         config.allowIdfaReading = settings[AdjustConstants.Keys.allowIdfaReading] as? Bool ?? false
         let isSKAdNetworkHandlingActive = settings[AdjustConstants.Keys.isSKAdNetworkHandlingActive] as? Bool ?? true

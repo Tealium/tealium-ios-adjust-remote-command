@@ -40,7 +40,6 @@ class TealiumAdjustTests: XCTestCase {
                                                         "sandbox": true])
         
         // Bug in Adjust SDK: XCTAssertEqual(adjInstance.adjConfig!.logLevel, ADJLogLevelSuppress)
-        XCTAssertFalse(adjInstance.adjConfig!.allowiAdInfoReading)
         XCTAssertFalse(adjInstance.adjConfig!.allowAdServicesInfoReading)
         XCTAssertFalse(adjInstance.adjConfig!.allowIdfaReading)
         XCTAssertFalse(adjInstance.adjConfig!.isSKAdNetworkHandlingActive)
@@ -52,7 +51,6 @@ class TealiumAdjustTests: XCTestCase {
                                        AdjustConstants.Keys.externalDeviceId: "testDeviceId",
                                        AdjustConstants.Keys.eventBufferingEnabled: true,
                                        AdjustConstants.Keys.sendInBackground: true,
-                                       AdjustConstants.Keys.allowiAdInfoReading: true,
                                        AdjustConstants.Keys.allowAdServicesInfoReading: true,
                                        AdjustConstants.Keys.allowIdfaReading: true,
                                        AdjustConstants.Keys.urlStrategy: "url_strategy_china"]
@@ -66,7 +64,6 @@ class TealiumAdjustTests: XCTestCase {
         XCTAssertEqual(adjInstance.adjConfig!.defaultTracker, "testDefaultTracker")
         XCTAssertEqual(adjInstance.adjConfig!.externalDeviceId, "testDeviceId")
         XCTAssertTrue(adjInstance.adjConfig!.sendInBackground)
-        XCTAssertTrue(adjInstance.adjConfig!.allowiAdInfoReading)
         XCTAssertTrue(adjInstance.adjConfig!.allowAdServicesInfoReading)
         XCTAssertTrue(adjInstance.adjConfig!.allowIdfaReading)
         XCTAssertEqual(adjInstance.adjConfig!.urlStrategy, "url_strategy_china")
