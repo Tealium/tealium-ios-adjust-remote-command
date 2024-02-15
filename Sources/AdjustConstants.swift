@@ -12,7 +12,7 @@ public enum AdjustConstants {
     static let commandName = "command_name"
     static let separator: Character = ","
     static let commandId = "adjust"
-    static let version = "1.1.0"
+    static let version = "1.2.0"
     static let description = "Adjust Remote Command"
     
     enum Commands: String {
@@ -47,7 +47,6 @@ public enum AdjustConstants {
         static let secretInfoFour = "app_secret_info_4"
         static let logLevel = "log_level"
         static let delayStart = "delay_start"
-        static let allowiAdInfoReading = "allow_iad"
         static let allowAdServicesInfoReading = "allow_ad_services"
         static let allowIdfaReading = "allow_idfa"
         static let isSKAdNetworkHandlingActive = "sk_ad_network_active"
@@ -77,6 +76,7 @@ public enum AdjustConstants {
         static let adRevenueSource = "ad_revenue_source"
         static let adRevenuePayload = "ad_revenue_payload"
         static let urlStrategy = "url_strategy"
+        static let thirdPartySharingOptions = "third_party_sharing_options"
     }
     
 }

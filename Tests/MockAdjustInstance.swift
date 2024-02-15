@@ -124,7 +124,7 @@ class MockAdjustInstance: AdjustCommand {
         gdprForgetMeCallCount += 1
     }
     
-    func trackThirdPartySharing(enabled: Bool) {
+    func trackThirdPartySharing(enabled: Bool?, options: [String: [String: String]]?) {
         trackThirdPartySharingCallCount += 1
     }
     

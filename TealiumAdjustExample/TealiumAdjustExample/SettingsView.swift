@@ -14,6 +14,7 @@ struct Settings {
     var consented = true
     var enabled = true
     var offlineMode = true
+    var thirdPartySharing = true
 }
 
 struct SettingsView: View {
@@ -30,6 +31,16 @@ struct SettingsView: View {
             }
             ToggleView("Offline Mode", isOn: $settings.offlineMode) { value in
                 TealiumHelper.trackEvent(title: "offline", data: ["enabled": value])
+            }
+            ToggleView("Third Party Sharing", isOn: $settings.thirdPartySharing) { value in
+                TealiumHelper.trackEvent(title: "third_party_sharing", data: [
+                    "enabled": value,
+                    "sharing_options": [
+                        "partner": [
+                            "option": value ? "1" : "0"
+                        ]
+                    ]
+                ])
             }
             HStack {
                 CustomTextField(placeholder: "Key", text: $settings.key)

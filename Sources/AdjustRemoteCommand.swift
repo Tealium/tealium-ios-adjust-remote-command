@@ -144,11 +144,13 @@ public class AdjustRemoteCommand: RemoteCommand {
             case .gdprForgetMe:
                 adjustInstance.gdprForgetMe()
             case .setThirdPartySharing:
-                guard let enabled = payload[AdjustConstants.Keys.enabled] as? Bool else {
-                    log("\(AdjustConstants.Keys.enabled) required")
+                let enabled = payload[AdjustConstants.Keys.enabled] as? Bool
+                let granularOptions = payload[AdjustConstants.Keys.thirdPartySharingOptions] as? [String: [String: String]]
+                guard enabled != nil || granularOptions != nil else {
+                    log("\(AdjustConstants.Keys.enabled) or \(AdjustConstants.Keys.thirdPartySharingOptions) required")
                     return
                 }
-                adjustInstance.trackThirdPartySharing(enabled: enabled)
+                adjustInstance.trackThirdPartySharing(enabled: enabled, options: granularOptions)
             case .trackMeasurementConsent:
                 guard let consented = payload[AdjustConstants.Keys.measurementConsent] as? Bool else {
                     log("\(AdjustConstants.Keys.measurementConsent) required")
@@ -219,7 +221,6 @@ public class AdjustRemoteCommand: RemoteCommand {
         if let residency = settings[AdjustConstants.Keys.urlStrategy] as? String {
             config.urlStrategy = residency
         }
-        config.allowiAdInfoReading = settings[AdjustConstants.Keys.allowiAdInfoReading] as? Bool ?? false
         config.allowAdServicesInfoReading = settings[AdjustConstants.Keys.allowAdServicesInfoReading] as? Bool ?? false
         config.allowIdfaReading = settings[AdjustConstants.Keys.allowIdfaReading] as? Bool ?? false
         let isSKAdNetworkHandlingActive = settings[AdjustConstants.Keys.isSKAdNetworkHandlingActive] as? Bool ?? true
