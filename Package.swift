@@ -4,13 +4,13 @@ import PackageDescription
 let package = Package(
     name: "TealiumAdjust",
     platforms: [
-        .iOS(.v11)
+        .iOS(.v12)
     ],
     products: [
         .library(name: "TealiumAdjust", targets: ["TealiumAdjust"])
     ],
     dependencies: [
-        .package(name: "TealiumSwift", url: "https://github.com/tealium/tealium-swift", .upToNextMajor(from: "2.11.0")),
+        .package(name: "TealiumSwift", url: "https://github.com/tealium/tealium-swift", .upToNextMajor(from: "2.12.0")),
         .package(name: "Adjust", url: "https://github.com/adjust/ios_sdk", .upToNextMajor(from: "4.34.0"))
     ],
     targets: [

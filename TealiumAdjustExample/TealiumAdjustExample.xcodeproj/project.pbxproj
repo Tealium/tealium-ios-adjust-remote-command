@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -190,7 +190,6 @@
 				A31C5E77E5E73BDA1600A272 /* Pods-TealiumAdjustExample.debug.xcconfig */,
 				0B0C235FF3C0B40B791416D2 /* Pods-TealiumAdjustExample.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -455,10 +454,6 @@
 				DEVELOPMENT_ASSET_PATHS = "\"TealiumAdjustExample/Preview Content\"";
 				DEVELOPMENT_TEAM = XC939GDC9P;
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = TealiumAdjustExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -486,10 +481,6 @@
 				DEVELOPMENT_ASSET_PATHS = "\"TealiumAdjustExample/Preview Content\"";
 				DEVELOPMENT_TEAM = XC939GDC9P;
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = TealiumAdjustExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
