@@ -24,7 +24,7 @@ class TealiumAdjustTests: XCTestCase {
 
     func testInitializeWithConfig_IsCalled() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "test_api_token",
+                                                        "api_token": "testApiToken",
                                                         "sandbox": true])
         XCTAssertEqual(adjInstance.initializeWithAdjustConfigCallCount, 1)
     }
@@ -36,18 +36,17 @@ class TealiumAdjustTests: XCTestCase {
     
     func testInitialize_SetsVariablesOnConfigToDefault_WhenNotInSettings() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "test_api_token",
+                                                        "api_token": "testApiToken",
                                                         "sandbox": true])
         
         // Bug in Adjust SDK: XCTAssertEqual(adjInstance.adjConfig!.logLevel, ADJLogLevelSuppress)
-        XCTAssertFalse(adjInstance.adjConfig!.allowAdServicesInfoReading)
-        XCTAssertFalse(adjInstance.adjConfig!.allowIdfaReading)
-        XCTAssertFalse(adjInstance.adjConfig!.isSKAdNetworkHandlingActive)
+        XCTAssertTrue(adjInstance.adjConfig!.isAdServicesEnabled)
+        XCTAssertTrue(adjInstance.adjConfig!.isIdfaReadingEnabled)
+        XCTAssertTrue(adjInstance.adjConfig!.isSkanAttributionEnabled)
     }
     
     func testInitialize_SetsStandardExpectedVariablesOnConfig_WhenInSettings() {
-        let settings: [String: Any] = [AdjustConstants.Keys.delayStart: 30.0,
-                                       AdjustConstants.Keys.defaultTracker: "testDefaultTracker",
+        let settings: [String: Any] = [AdjustConstants.Keys.defaultTracker: "testDefaultTracker",
                                        AdjustConstants.Keys.externalDeviceId: "testDeviceId",
                                        AdjustConstants.Keys.eventBufferingEnabled: true,
                                        AdjustConstants.Keys.sendInBackground: true,
@@ -56,17 +55,16 @@ class TealiumAdjustTests: XCTestCase {
                                        AdjustConstants.Keys.urlStrategy: "url_strategy_china"]
         
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "test_api_token",
+                                                        "api_token": "testApiToken",
                                                         "sandbox": true,
                                                         "settings": settings])
         
-        XCTAssertEqual(adjInstance.adjConfig!.delayStart, 30.0)
         XCTAssertEqual(adjInstance.adjConfig!.defaultTracker, "testDefaultTracker")
         XCTAssertEqual(adjInstance.adjConfig!.externalDeviceId, "testDeviceId")
-        XCTAssertTrue(adjInstance.adjConfig!.sendInBackground)
-        XCTAssertTrue(adjInstance.adjConfig!.allowAdServicesInfoReading)
-        XCTAssertTrue(adjInstance.adjConfig!.allowIdfaReading)
-        XCTAssertEqual(adjInstance.adjConfig!.urlStrategy, "url_strategy_china")
+        XCTAssertTrue(adjInstance.adjConfig!.isSendingInBackgroundEnabled)
+        XCTAssertTrue(adjInstance.adjConfig!.isAdServicesEnabled)
+        XCTAssertTrue(adjInstance.adjConfig!.isIdfaReadingEnabled)
+        XCTAssertEqual(adjInstance.adjConfig!.urlStrategyDomains as? [String], ["url_strategy_china"])
     }
     
     func testInitialize_SetsLogLevel() {
@@ -78,22 +76,6 @@ class TealiumAdjustTests: XCTestCase {
         
         // Bug in Adjust SDK: XCTAssertEqual(adjInstance.adjConfig!.logLevel, ADJLogLevelAssert)
     }
-    
-    func testInitialize_SetsAppSecret() {
-        let settings = [AdjustConstants.Keys.secretId: 1234,
-                        AdjustConstants.Keys.secretInfoOne: 1,
-                        AdjustConstants.Keys.secretInfoTwo: 2,
-                        AdjustConstants.Keys.secretInfoThree: 3,
-                        AdjustConstants.Keys.secretInfoFour: 4]
-        
-        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "test_api_token",
-                                                        "settings": settings])
-        
-        XCTAssertEqual(adjInstance.adjConfig!.appSecret, "1234")
-        XCTAssertEqual(adjInstance.adjConfig!.secretId, "1234")
-    }
-
     
     func testInitialize_SetsDelegate() {
         let mockDelegate = MockAdjustDelegateClass()
@@ -110,7 +92,7 @@ class TealiumAdjustTests: XCTestCase {
                                                         "api_token": "h9a5gman7nr4",
                                                         "settings": settings])
         
-        XCTAssertTrue(adjInstance.adjConfig!.isSKAdNetworkHandlingActive)
+        XCTAssertTrue(adjInstance.adjConfig!.isSkanAttributionEnabled)
     }
     
     func testRequestTrackingAuthorizationCalled_WhenCompletionIsSet() {
@@ -151,8 +133,7 @@ class TealiumAdjustTests: XCTestCase {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "tracksubscription",
                                                         "revenue": 24.33,
                                                         "currency": "USD",
-                                                        "order_id": "ord123",
-                                                        "receipt": Data()])
+                                                        "order_id": "ord123"])
         XCTAssertEqual(adjInstance.trackSubscriptionCallCount, 1)
     }
     
@@ -171,7 +152,7 @@ class TealiumAdjustTests: XCTestCase {
         XCTAssertEqual(adjInstance.trackSubscriptionCallCount, 0)
     }
     
-    func testTrackSubscription_IsNotCalled_WhenNoReceipt() {
+    func testTrackSubscription_IsNotCalled_WhenNoData() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "tracksubscription"])
         XCTAssertEqual(adjInstance.trackSubscriptionCallCount, 0)
     }
@@ -182,7 +163,6 @@ class TealiumAdjustTests: XCTestCase {
                                                         "revenue": 24.33,
                                                         "currency": "USD",
                                                         "order_id": "ord123",
-                                                        "receipt": Data(),
                                                         "purchase_time": 1415639000,
                                                         "sales_region": "US",
                                                         "callback": ["foo": "bar"],
@@ -190,7 +170,6 @@ class TealiumAdjustTests: XCTestCase {
         XCTAssertEqual(adjInstance.adjSubscription?.price, 24.33)
         XCTAssertEqual(adjInstance.adjSubscription?.currency, "USD")
         XCTAssertEqual(adjInstance.adjSubscription?.transactionId, "ord123")
-        XCTAssertNotNil(adjInstance.adjSubscription?.receipt)
         XCTAssertNotNil(adjInstance.adjSubscription?.transactionDate)
         XCTAssertTrue(adjInstance.adjSubscription!.callbackParameters.equal(to: ["foo": "bar"]))
         XCTAssertTrue(adjInstance.adjSubscription!.partnerParameters.equal(to: ["fizz": "buzz"]))
@@ -220,20 +199,12 @@ class TealiumAdjustTests: XCTestCase {
     
     func testTrackAdRevenue_IsCalled() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackadrevenue",
-                                                        "ad_revenue_source": "testSource",
-                                                        "ad_revenue_payload": ["fan": "ban"]])
+                                                        "ad_revenue_source": "testSource"])
         XCTAssertEqual(adjInstance.trackAdRevenueCallCount, 1)
     }
     
     func testTrackAdRevenue_IsNotCalled_WhenNoSource() {
-        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackadrevenue",
-                                                        "ad_revenue_payload": ["fan": "ban"]])
-        XCTAssertEqual(adjInstance.trackAdRevenueCallCount, 0)
-    }
-    
-    func testTrackAdRevenue_IsNotCalled_WhenNoPayload() {
-        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackadrevenue",
-                                                        "ad_revenue_source": "testSource"])
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackadrevenue"])
         XCTAssertEqual(adjInstance.trackAdRevenueCallCount, 0)
     }
     

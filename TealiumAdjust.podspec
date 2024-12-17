@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
     # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
     s.name         = "TealiumAdjust"
     s.module_name  = "TealiumAdjust"
-    s.version      = "1.3.0"
+    s.version      = "2.0.0"
     s.summary      = "Tealium Swift and Adjust integration"
     s.description  = <<-DESC
     Tealium's integration with Adjust for iOS.
@@ -29,8 +29,8 @@ Pod::Spec.new do |s|
     s.ios.source_files      = "Sources/*.{swift}"
 
     # ――― Dependencies ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-    s.ios.dependency 'tealium-swift/Core', '~> 2.12'
-    s.ios.dependency 'tealium-swift/RemoteCommands', '~> 2.12'
-    s.ios.dependency 'Adjust', '~> 4.34'
+    s.ios.dependency 'tealium-swift/Core', '~> 2.14'
+    s.ios.dependency 'tealium-swift/RemoteCommands', '~> 2.14'
+    s.ios.dependency 'Adjust', '~> 5.0'
 
 end

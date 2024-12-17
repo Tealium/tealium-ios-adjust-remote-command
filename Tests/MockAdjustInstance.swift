@@ -74,7 +74,7 @@ class MockAdjustInstance: AdjustCommand {
     var adjustDelegate: (AdjustDelegate & NSObjectProtocol)?
     var adjConfig: ADJConfig?
     var adjEvent: ADJEvent?
-    var adjSubscription: ADJSubscription?
+    var adjSubscription: ADJAppStoreSubscription?
     
     
     func initialize(with config: ADJConfig) {
@@ -87,7 +87,7 @@ class MockAdjustInstance: AdjustCommand {
         sendEventCallCount += 1
     }
     
-    func trackSubscription(_ subscription: ADJSubscription) {
+    func trackSubscription(_ subscription: ADJAppStoreSubscription) {
         adjSubscription = subscription
         trackSubscriptionCallCount += 1
     }
@@ -96,7 +96,7 @@ class MockAdjustInstance: AdjustCommand {
         requestTrackingAuthorizationCallCount += 1
     }
     
-    func updateConversionValue(_ value: Int) {
+    func updateConversionValue(_ value: Int, coarseValue: String?, lockWindow: Bool?) {
         updateConversionValueCallCount += 1
     }
     
@@ -104,7 +104,7 @@ class MockAdjustInstance: AdjustCommand {
         appWillOpenCallCount += 1
     }
     
-    func trackAdRevenue(_ source: String, payload: [String : Any]) {
+    func trackAdRevenue(_ source: String) {
         trackAdRevenueCallCount += 1
     }
     

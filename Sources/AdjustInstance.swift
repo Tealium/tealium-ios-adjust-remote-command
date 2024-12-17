@@ -15,11 +15,11 @@ import AdjustSdk
 public protocol AdjustCommand {
     func initialize(with config: ADJConfig)
     func sendEvent(_ event: ADJEvent)
-    func trackSubscription(_ subscription: ADJSubscription)
+    func trackSubscription(_ subscription: ADJAppStoreSubscription)
     func requestTrackingAuthorization(with completion: @escaping (UInt) -> Void)
-    func updateConversionValue(_ value: Int)
+    func updateConversionValue(_ value: Int, coarseValue: String?, lockWindow: Bool?)
     func appWillOpen(_ url: URL)
-    func trackAdRevenue(_ source: String, payload: [String: Any])
+    func trackAdRevenue(_ source: String)
     func setPushToken(_ token: String)
     func setEnabled(_ enabled: Bool)
     func setOfflineMode(enabled: Bool)
@@ -49,7 +49,7 @@ public class AdjustInstance: AdjustCommand {
         guard !initialized else {
             return
         }
-        Adjust.appDidLaunch(config)
+        Adjust.initSdk(config)
         initialized = true
     }
     
@@ -57,41 +57,50 @@ public class AdjustInstance: AdjustCommand {
         Adjust.trackEvent(event)
     }
     
-    public func trackSubscription(_ subscription: ADJSubscription) {
-        Adjust.trackSubscription(subscription)
+    public func trackSubscription(_ subscription: ADJAppStoreSubscription) {
+        Adjust.trackAppStoreSubscription(subscription)
     }
     
     public func requestTrackingAuthorization(with completion: @escaping (UInt) -> Void) {
-        Adjust.requestTrackingAuthorization { status in
+        Adjust.requestAppTrackingAuthorization { status in
             completion(status)
         }
     }
     
-    public func updateConversionValue(_ value: Int) {
-        Adjust.updateConversionValue(value)
+    public func updateConversionValue(_ value: Int, coarseValue: String?, lockWindow: Bool?) {
+        Adjust.updateSkanConversionValue(value, coarseValue: coarseValue, lockWindow: lockWindow.map { $0 ? 1 : 0 })
     }
     
     public func appWillOpen(_ url: URL) {
-        Adjust.appWillOpen(url)
+        if let deeplink = ADJDeeplink(deeplink: url) {
+            Adjust.processDeeplink(deeplink)
+        }
     }
     
-    public func trackAdRevenue(_ source: String, payload: [String : Any]) {
-        guard let payload = try? JSONSerialization.data(withJSONObject:payload) else {
-            return
+    public func trackAdRevenue(_ source: String) {
+        if let adRevenue = ADJAdRevenue(source: source) {
+            Adjust.trackAdRevenue(adRevenue)
         }
-        Adjust.trackAdRevenue(source, payload: payload)
     }
     
     public func setPushToken(_ token: String) {
-        Adjust.setPushToken(token)
+        Adjust.setPushToken(Data(token.utf8))
     }
     
     public func setEnabled(_ enabled: Bool) {
-        Adjust.setEnabled(enabled)
+        if enabled {
+            Adjust.enable()
+        } else {
+            Adjust.disable()
+        }
     }
     
     public func setOfflineMode(enabled: Bool) {
-        Adjust.setOfflineMode(enabled)
+        if enabled {
+            Adjust.switchToOfflineMode()
+        } else {
+            Adjust.switchBackToOnlineMode()
+        }
     }
     
     public func gdprForgetMe() {
@@ -99,7 +108,7 @@ public class AdjustInstance: AdjustCommand {
     }
     
     public func trackThirdPartySharing(enabled: Bool?, options: [String: [String: String]]?) {
-        guard let adjThirdPartySharing = ADJThirdPartySharing(isEnabledNumberBool: enabled.map { $0 ? 1 : 0 } ) else {
+        guard let adjThirdPartySharing = ADJThirdPartySharing(isEnabled: enabled.map { $0 ? 1 : 0 } ) else {
             return
         }
         
@@ -119,36 +128,35 @@ public class AdjustInstance: AdjustCommand {
     
     public func addSessionCallbackParams(_ params: [String : String]) {
         params.forEach {
-            Adjust.addSessionCallbackParameter($0.key, value: $0.value)
+            Adjust.addGlobalCallbackParameter($0.value, forKey: $0.key)
         }
     }
     
     public func removeSessionCallbackParams(_ paramNames: [String]) {
         paramNames.forEach {
-            Adjust.removeSessionCallbackParameter($0)
+            Adjust.removeGlobalCallbackParameter(forKey: $0)
         }
     }
     
     public func resetSessionCallbackParams() {
-        Adjust.resetSessionCallbackParameters()
+        Adjust.removeGlobalCallbackParameters()
     }
     
     public func addSessionPartnerParams(_ params: [String : String]) {
         params.forEach {
-            Adjust.addSessionPartnerParameter($0.key, value: $0.value)
+            Adjust.addGlobalPartnerParameter($0.value, forKey: $0.key)
         }
     }
     
     public func removeSessionPartnerParams(_ paramNames: [String]) {
         paramNames.forEach {
-            Adjust.removeSessionPartnerParameter($0)
+            Adjust.removeGlobalPartnerParameter(forKey: $0)
         }
     }
     
     public func resetSessionPartnerParams() {
-        Adjust.resetSessionPartnerParameters()
+        Adjust.removeGlobalPartnerParameters()
     }
-    
 }
 
 

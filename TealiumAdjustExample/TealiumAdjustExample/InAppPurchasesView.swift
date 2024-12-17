@@ -26,7 +26,6 @@ struct InAppPurchasesView: View {
                                                 "order_total": Double.random(in: 1.0...20.0).round,
                                                 "order_currency": "USD",
                                                 "sales_region": "US",
-                                                "appstore_receipt_data": Data(),
                                                 "customer_id": "cust123",
                                                 "customer_is_member": true,
                                                 "conversion_value": Int.random(in: 1...12)])

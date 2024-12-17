@@ -1,2 +1,2 @@
-github "adjust/ios_sdk" "v4.37.0"
-github "tealium/tealium-swift" "2.12.0"
+github "adjust/ios_sdk" "v5.0.1"
+github "tealium/tealium-swift" "2.14.1"
