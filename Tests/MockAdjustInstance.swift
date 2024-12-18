@@ -75,6 +75,7 @@ class MockAdjustInstance: AdjustCommand {
     var adjConfig: ADJConfig?
     var adjEvent: ADJEvent?
     var adjSubscription: ADJAppStoreSubscription?
+    var adRevenue: ADJAdRevenue?
     
     
     func initialize(with config: ADJConfig) {
@@ -104,7 +105,8 @@ class MockAdjustInstance: AdjustCommand {
         appWillOpenCallCount += 1
     }
     
-    func trackAdRevenue(_ source: String) {
+    func trackAdRevenue(_ adRevenue: ADJAdRevenue) {
+        self.adRevenue = adRevenue
         trackAdRevenueCallCount += 1
     }
     

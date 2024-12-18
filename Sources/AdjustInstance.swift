@@ -19,7 +19,7 @@ public protocol AdjustCommand {
     func requestTrackingAuthorization(with completion: @escaping (UInt) -> Void)
     func updateConversionValue(_ value: Int, coarseValue: String?, lockWindow: Bool?)
     func appWillOpen(_ url: URL)
-    func trackAdRevenue(_ source: String)
+    func trackAdRevenue(_ adRevenue: ADJAdRevenue)
     func setPushToken(_ token: String)
     func setEnabled(_ enabled: Bool)
     func setOfflineMode(enabled: Bool)
@@ -77,10 +77,8 @@ public class AdjustInstance: AdjustCommand {
         }
     }
     
-    public func trackAdRevenue(_ source: String) {
-        if let adRevenue = ADJAdRevenue(source: source) {
-            Adjust.trackAdRevenue(adRevenue)
-        }
+    public func trackAdRevenue(_ adRevenue: ADJAdRevenue) {
+        Adjust.trackAdRevenue(adRevenue)
     }
     
     public func setPushToken(_ token: String) {

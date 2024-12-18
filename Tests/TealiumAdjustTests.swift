@@ -52,7 +52,7 @@ class TealiumAdjustTests: XCTestCase {
                                        AdjustConstants.Keys.sendInBackground: true,
                                        AdjustConstants.Keys.allowAdServicesInfoReading: true,
                                        AdjustConstants.Keys.allowIdfaReading: true,
-                                       AdjustConstants.Keys.urlStrategy: "url_strategy_china"]
+                                       AdjustConstants.Keys.urlStrategy: "DataResidencyEU"]
         
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
                                                         "api_token": "testApiToken",
@@ -64,7 +64,26 @@ class TealiumAdjustTests: XCTestCase {
         XCTAssertTrue(adjInstance.adjConfig!.isSendingInBackgroundEnabled)
         XCTAssertTrue(adjInstance.adjConfig!.isAdServicesEnabled)
         XCTAssertTrue(adjInstance.adjConfig!.isIdfaReadingEnabled)
-        XCTAssertEqual(adjInstance.adjConfig!.urlStrategyDomains as? [String], ["url_strategy_china"])
+        XCTAssertEqual(adjInstance.adjConfig!.urlStrategyDomains as? [String], ["eu.adjust.com"])
+        XCTAssertTrue(adjInstance.adjConfig!.useSubdomains)
+        XCTAssertTrue(adjInstance.adjConfig!.isDataResidency)
+    }
+
+    func testInitialize_SetsCustomUrlStrategy_WhenInSettings() {
+        let settings: [String: Any] = [
+            AdjustConstants.Keys.urlStrategyDomains: ["customDomain.com"],
+            AdjustConstants.Keys.urlStrategyUseSubdomains: true,
+            AdjustConstants.Keys.urlStrategyIsResidency: true,
+        ]
+        
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
+                                                        "api_token": "testApiToken",
+                                                        "sandbox": true,
+                                                        "settings": settings])
+        
+        XCTAssertEqual(adjInstance.adjConfig!.urlStrategyDomains as? [String], ["customDomain.com"])
+        XCTAssertTrue(adjInstance.adjConfig!.useSubdomains)
+        XCTAssertTrue(adjInstance.adjConfig!.isDataResidency)
     }
     
     func testInitialize_SetsLogLevel() {
@@ -207,6 +226,45 @@ class TealiumAdjustTests: XCTestCase {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackadrevenue"])
         XCTAssertEqual(adjInstance.trackAdRevenueCallCount, 0)
     }
+
+    func testTrackAdRevenue_addsPayload() {
+        adjustRemoteCommand.processRemoteCommand(with: [
+            "command_name": "trackadrevenue",
+            "ad_revenue_source": "testSource",
+            "ad_revenue_payload": [
+                "impressions_count": 3,
+                "amount": 24,
+                "currency": "testCurrency",
+                "network": "testNetwork",
+                "placement": "testPlacement",
+                "unit": "testAdUnit",
+                "callback": [
+                    "key_callback1": "value1",
+                    "key_callback2": "value2"
+                ],
+                "partner": [
+                    "key_parameter1": "value1",
+                    "key_parameter2": "value2"
+                ]
+            ]
+        ])
+        XCTAssertEqual(adjInstance.adRevenue?.adImpressionsCount, 3)
+        XCTAssertEqual(adjInstance.adRevenue?.source, "testSource")
+        XCTAssertEqual(adjInstance.adRevenue?.revenue, 24)
+        XCTAssertEqual(adjInstance.adRevenue?.currency, "testCurrency")
+        XCTAssertEqual(adjInstance.adRevenue?.adRevenueNetwork, "testNetwork")
+        XCTAssertEqual(adjInstance.adRevenue?.adRevenuePlacement, "testPlacement")
+        XCTAssertEqual(adjInstance.adRevenue?.adRevenueUnit, "testAdUnit")
+        XCTAssertEqual(adjInstance.adRevenue?.callbackParameters as? [String: String], [
+            "key_callback1": "value1",
+            "key_callback2": "value2"
+        ])
+        XCTAssertEqual(adjInstance.adRevenue?.partnerParameters as? [String: String], [
+            "key_parameter1": "value1",
+            "key_parameter2": "value2"
+        ])
+    }
+    
     
     func testSetPushToken_IsCalled() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "setpushtoken",

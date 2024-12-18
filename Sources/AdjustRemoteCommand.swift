@@ -89,7 +89,13 @@ public class AdjustRemoteCommand: RemoteCommand {
                 let callbackParams = payload[AdjustConstants.Keys.callbackParameters] as? [String: String]
                 let partnerParams = payload[AdjustConstants.Keys.partnerParameters] as? [String: String]
                 
-                sendEvent(eventToken, transactionId: transactionId, revenue: revenue, currency: currency, callbackParams: callbackParams, partnerParams: partnerParams, callbackId: callbackId)
+                sendEvent(eventToken,
+                          transactionId: transactionId,
+                          revenue: revenue,
+                          currency: currency,
+                          callbackParams: callbackParams,
+                          partnerParams: partnerParams,
+                          callbackId: callbackId)
             case .trackSubscription:
                 guard let price = payload[AdjustConstants.Keys.revenue] as? Double,
                       let currency = payload[AdjustConstants.Keys.currency] as? String,
@@ -102,7 +108,13 @@ public class AdjustRemoteCommand: RemoteCommand {
                 let callbackParams = payload[AdjustConstants.Keys.callbackParameters] as? [String: String]
                 let partnerParams = payload[AdjustConstants.Keys.partnerParameters] as? [String: String]
                 
-                trackSubscription(price: price, currency: currency, transactionId: transactionId, transactionDate: Date(timeIntervalSince1970: purchaseTime), salesRegion: salesRegion, callbackParams: callbackParams, partnerParams: partnerParams)
+                trackSubscription(price: price,
+                                  currency: currency,
+                                  transactionId: transactionId,
+                                  transactionDate: Date(timeIntervalSince1970: purchaseTime),
+                                  salesRegion: salesRegion,
+                                  callbackParams: callbackParams,
+                                  partnerParams: partnerParams)
             case .updateConversionValue:
                 guard let conversionValue = payload[AdjustConstants.Keys.conversionValue] as? Int else {
                     log("\(AdjustConstants.Keys.conversionValue) required")
@@ -119,11 +131,15 @@ public class AdjustRemoteCommand: RemoteCommand {
                 }
                 adjustInstance.appWillOpen(url)
             case .trackAdRevenue:
-                guard let source = payload[AdjustConstants.Keys.adRevenueSource] as? String else {
+                guard let source = payload[AdjustConstants.Keys.adRevenueSource] as? String,
+                      let adRevenue = ADJAdRevenue(source: source) else {
                     log("\(AdjustConstants.Keys.adRevenueSource) required")
                     return
                 }
-                adjustInstance.trackAdRevenue(source)
+                if let adRevenuePayload = payload[AdjustConstants.Keys.adRevenuePayload] as? [String: Any] {
+                    setPayload(adRevenuePayload, to: adRevenue)
+                }
+                adjustInstance.trackAdRevenue(adRevenue)
             case .setPushToken:
                 guard let token = payload[AdjustConstants.Keys.pushToken] as? String else {
                     log("\(AdjustConstants.Keys.pushToken) required")
@@ -191,6 +207,38 @@ public class AdjustRemoteCommand: RemoteCommand {
             }
         }
     }
+
+    func setPayload(_ payload: [String : Any], to adRevenue: ADJAdRevenue) {
+        if let impressionCount = payload[AdjustConstants.Keys.adRevenueImpressionsCount] as? NSNumber {
+            adRevenue.setAdImpressionsCount(impressionCount.int32Value)
+        }
+        if let unit = payload[AdjustConstants.Keys.adRevenueUnit] as? String {
+            adRevenue.setAdRevenueUnit(unit)
+        }
+        if let network = payload[AdjustConstants.Keys.adRevenueNetwork] as? String {
+            adRevenue.setAdRevenueNetwork(network)
+        }
+        if let revenueAmount = payload[AdjustConstants.Keys.adRevenueAmount] as? NSNumber,
+            let currency = payload[AdjustConstants.Keys.adRevenueCurrency] as? String {
+            adRevenue.setRevenue(revenueAmount.doubleValue, currency: currency)
+        }
+        if let placement = payload[AdjustConstants.Keys.adRevenuePlacement] as? String {
+            adRevenue.setAdRevenuePlacement(placement)
+        }
+        if let impressionCount = payload[AdjustConstants.Keys.adRevenuePlacement] as? NSNumber {
+            adRevenue.setAdImpressionsCount(impressionCount.int32Value)
+        }
+        if let callbackParameters = payload[AdjustConstants.Keys.callbackParameters] as? [String: String] {
+            for parameter in callbackParameters {
+                adRevenue.addCallbackParameter(parameter.key, value: parameter.value)
+            }
+        }
+        if let partnerParameters = payload[AdjustConstants.Keys.partnerParameters] as? [String: String] {
+            for parameter in partnerParameters {
+                adRevenue.addPartnerParameter(parameter.key, value: parameter.value)
+            }
+        }
+    }
     
     public func initialize(apiToken: String, sandbox: Bool, settings: [String : Any]) {
         let environment = sandbox ? ADJEnvironmentSandbox : ADJEnvironmentProduction
@@ -209,15 +257,13 @@ public class AdjustRemoteCommand: RemoteCommand {
         if let sendInBackground = settings[AdjustConstants.Keys.sendInBackground] as? Bool, sendInBackground {
             config.enableSendingInBackground()
         }
-        let strategy = settings[AdjustConstants.Keys.urlStrategy]
-        var strategies = strategy as? [String]
-        if strategies == nil, let strategy = strategy as? String {
-            strategies = [strategy]
-        }
-        if let strategies {
-            config.setUrlStrategy(strategies,
-                                  useSubdomains: settings[AdjustConstants.Keys.urlStrategyUseSubdomains] as? Bool ?? false,
-                                  isDataResidency: [AdjustConstants.Keys.urlStrategyIsResidency] as? Bool ?? false)
+        if let strategyKey = settings[AdjustConstants.Keys.urlStrategy] as? String,
+           let strategy = UrlStrategy.defaultStrategies[strategyKey] {
+            config.setUrlStrategy(strategy.domains, useSubdomains: strategy.useSubdomains, isDataResidency: strategy.isDataResidency)
+        } else if let domains = settings[AdjustConstants.Keys.urlStrategyDomains] as? [String],
+                  let useSubdomains = settings[AdjustConstants.Keys.urlStrategyUseSubdomains] as? Bool,
+                  let isDataResidency = settings[AdjustConstants.Keys.urlStrategyIsResidency] as? Bool {
+            config.setUrlStrategy(domains, useSubdomains: useSubdomains, isDataResidency: isDataResidency)
         }
         if let allowAdServicesInfoReading = settings[AdjustConstants.Keys.allowAdServicesInfoReading] as? Bool, !allowAdServicesInfoReading {
             config.disableAdServices()
@@ -346,4 +392,34 @@ fileprivate extension ADJLogLevel {
             self = ADJLogLevel.suppress
         }
     }
+}
+
+struct UrlStrategy {
+    
+    static let defaultStrategies: [String: Self] = [
+        "DataResidencyEU": UrlStrategy(domains: ["eu.adjust.com"],
+                                       useSubdomains: true,
+                                       isDataResidency: true),
+        "DataResidencyTR": UrlStrategy(domains: ["tr.adjust.com"],
+                                       useSubdomains: true,
+                                       isDataResidency: true),
+        "ADJDataResidencyUS": UrlStrategy(domains: ["us.adjust.com"],
+                                          useSubdomains: true,
+                                          isDataResidency: true),
+        "UrlStrategyChina": UrlStrategy(domains: ["adjust.world", "adjust.com"],
+                                        useSubdomains: true,
+                                        isDataResidency: false),
+        "UrlStrategyCn": UrlStrategy(domains: ["adjust.cn", "adjust.com"],
+                                     useSubdomains: true,
+                                     isDataResidency: false),
+        "UrlStrategyCnOnly": UrlStrategy(domains: ["adjust.cn"],
+                                         useSubdomains: true,
+                                         isDataResidency: false),
+        "UrlStrategyIndia": UrlStrategy(domains: ["adjust.net.in", "adjust.com"],
+                                        useSubdomains: true,
+                                        isDataResidency: false)
+    ]
+    let domains: [String]
+    let useSubdomains: Bool
+    let isDataResidency: Bool
 }
