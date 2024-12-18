@@ -90,7 +90,7 @@ class TealiumAdjustTests: XCTestCase {
         let settings = [AdjustConstants.Keys.logLevel: "assert"]
         
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "h9a5gman7nr4",
+                                                        "api_token": "testApiToken",
                                                         "settings": settings])
         
         // Bug in Adjust SDK: XCTAssertEqual(adjInstance.adjConfig!.logLevel, ADJLogLevelAssert)
@@ -100,7 +100,7 @@ class TealiumAdjustTests: XCTestCase {
         let mockDelegate = MockAdjustDelegateClass()
         adjustRemoteCommand.adjustDelegate = mockDelegate
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "h9a5gman7nr4"])
+                                                        "api_token": "testApiToken"])
         XCTAssertNotNil(adjInstance.adjConfig!.delegate)
     }
     
@@ -108,7 +108,7 @@ class TealiumAdjustTests: XCTestCase {
         let settings = [AdjustConstants.Keys.isSKAdNetworkHandlingActive: 1]
         
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "h9a5gman7nr4",
+                                                        "api_token": "testApiToken",
                                                         "settings": settings])
         
         XCTAssertTrue(adjInstance.adjConfig!.isSkanAttributionEnabled)
