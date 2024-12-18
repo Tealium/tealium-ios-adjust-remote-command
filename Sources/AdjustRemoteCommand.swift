@@ -222,7 +222,7 @@ public class AdjustRemoteCommand: RemoteCommand {
         if let placement = payload[AdjustConstants.Keys.adRevenuePlacement] as? String {
             adRevenue.setAdRevenuePlacement(placement)
         }
-        if let impressionCount = payload[AdjustConstants.Keys.adRevenuePlacement] as? NSNumber {
+        if let impressionCount = payload[AdjustConstants.Keys.adRevenueImpressionsCount] as? NSNumber {
             adRevenue.setAdImpressionsCount(impressionCount.int32Value)
         }
         if let callbackParameters = payload[AdjustConstants.Keys.callbackParameters] as? [String: String] {
