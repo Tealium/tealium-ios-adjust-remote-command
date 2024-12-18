@@ -209,9 +209,6 @@ public class AdjustRemoteCommand: RemoteCommand {
     }
 
     func setPayload(_ payload: [String : Any], to adRevenue: ADJAdRevenue) {
-        if let impressionCount = payload[AdjustConstants.Keys.adRevenueImpressionsCount] as? NSNumber {
-            adRevenue.setAdImpressionsCount(impressionCount.int32Value)
-        }
         if let unit = payload[AdjustConstants.Keys.adRevenueUnit] as? String {
             adRevenue.setAdRevenueUnit(unit)
         }
