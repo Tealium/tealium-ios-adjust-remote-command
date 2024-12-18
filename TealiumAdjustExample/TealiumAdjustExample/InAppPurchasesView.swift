@@ -33,6 +33,8 @@ struct InAppPurchasesView: View {
             TextButtonView(title: "Track Ad Revenue") {
                 TealiumHelper.trackEvent(title: "ad_revenue",
                                          data: ["ad_revenue_source": "someAdVendor",
+                                                "ad_revenue_amount": 24,
+                                                "ad_revenue_currency": "USD",
                                                 "campaign": "spring123",
                                                 "ad_uuid": UUID().uuidString])
             }

@@ -21,6 +21,8 @@
     "sales_region": "sales_region",
     "callback_id": "callback_id",
     "ad_revenue_source": "ad_revenue_source",
+    "ad_revenue_amount": "ad_revenue_payload.amount",
+    "ad_revenue_currency": "ad_revenue_payload.currency",
     "purchase_timestamp": "purchase_time",
     "deeplink_url": "deeplink_open_url",
     "push_token": "push_token",
