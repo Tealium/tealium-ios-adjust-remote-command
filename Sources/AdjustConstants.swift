@@ -28,12 +28,24 @@ public enum AdjustConstants {
         case gdprForgetMe = "gdprforgetme"
         case setThirdPartySharing = "setthirdpartysharing"
         case trackMeasurementConsent = "trackmeasurementconsent"
+        
         case addSessionCallbackParams = "addsessioncallbackparams"
+        case addGlobalCallbackParams = "addglobalcallbackparams"
+        
         case removeSessionCallbackParams = "removesessioncallbackparams"
+        case removeGlobalCallbackParams = "removeglobalcallbackparams"
+        
         case resetSessionCallbackParams = "resetsessioncallbackparams"
+        case resetGlobalCallbackParams = "resetglobalcallbackparams"
+        
         case addSessionPartnerParams = "addsessionpartnerparams"
+        case addGlobalPartnerParams = "addglobalpartnerparams"
+        
         case removeSessionPartnerParams = "removesessionpartnerparams"
+        case removeGlobalPartnerParams = "removeglobalpartnerparams"
+        
         case resetSessionPartnerParams = "resetsessionpartnerparams"
+        case resetGlobalPartnerParams = "resetglobalpartnerparams"
     }
 
     enum Keys {
@@ -69,8 +81,12 @@ public enum AdjustConstants {
         static let partnerParameters = "partner"
         static let sessionCallbackParameters = "session_callback"
         static let sessionPartnerParameters = "session_partner"
+        static let globalCallbackParameters = "global_callback"
+        static let globalPartnerParameters = "global_partner"
         static let removeSessionCallbackParameters = "remove_session_callback_params"
         static let removeSessionPartnerParameters = "remove_session_partner_params"
+        static let removeGlobalCallbackParameters = "remove_global_callback_params"
+        static let removeGlobalPartnerParameters = "remove_global_partner_params"
         static let adRevenueSource = "ad_revenue_source"
         static let adRevenuePayload = "ad_revenue_payload"
         static let adRevenueUnit = "unit"

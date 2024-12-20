@@ -368,63 +368,97 @@ class TealiumAdjustTests: XCTestCase {
         XCTAssertEqual(adjInstance.trackMeasurementConsentCallCount, 1)
     }
     
-    func testTrackMeasurementConsent_IsNotCalled_WhenNoEnabledFlag() {
+    func testTrackMeasurementConsent_IsNotCalled_WhenNoParameters() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackmeasurementconsent"])
         XCTAssertEqual(adjInstance.trackMeasurementConsentCallCount, 0)
     }
     
-    func testAddSessionCallbackParams_IsCalled() {
+    func testAddGlobalCallbackParams_IsCalled_With_SessionCallback() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "addsessioncallbackparams",
                                                         "session_callback": ["fin": "bin"]])
-        XCTAssertEqual(adjInstance.addSessionCallbackParamsCallCount, 1)
+        XCTAssertEqual(adjInstance.addGlobalCallbackParamsCallCount, 1)
     }
-    
-    func testAddSessionCallbackParams_IsNotCalled_WhenNoEnabledFlag() {
+
+    func testAddGlobalCallbackParams_IsCalled_With_GlobalCallback() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "addglobalcallbackparams",
+                                                        "global_callback": ["fin": "bin"]])
+        XCTAssertEqual(adjInstance.addGlobalCallbackParamsCallCount, 1)
+    }
+
+    func testAddGlobalCallbackParams_IsNotCalled_WhenNoParameters() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "addsessioncallbackparams"])
-        XCTAssertEqual(adjInstance.addSessionCallbackParamsCallCount, 0)
+        XCTAssertEqual(adjInstance.addGlobalCallbackParamsCallCount, 0)
     }
     
-    func testRemoveSessionCallbackParams_IsCalled() {
+    func testRemoveGlobalCallbackParams_IsCalled_With_RemoveSessionCallback() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "removesessioncallbackparams",
                                                         "remove_session_callback_params": ["fin"]])
-        XCTAssertEqual(adjInstance.removeSessionCallbackParamsCallCount, 1)
+        XCTAssertEqual(adjInstance.removeGlobalCallbackParamsCallCount, 1)
     }
     
-    func testRemoveSessionCallbackParams_IsNotCalled_WhenNoEnabledFlag() {
+    func testRemoveGlobalCallbackParams_IsCalled_With_RemoveGlobalCallback() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "removeglobalcallbackparams",
+                                                        "remove_global_callback_params": ["fin"]])
+        XCTAssertEqual(adjInstance.removeGlobalCallbackParamsCallCount, 1)
+    }
+    
+    func testRemoveGlobalCallbackParams_IsNotCalled_WhenNoParameters() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "removesessioncallbackparams"])
-        XCTAssertEqual(adjInstance.removeSessionCallbackParamsCallCount, 0)
+        XCTAssertEqual(adjInstance.removeGlobalCallbackParamsCallCount, 0)
     }
     
-    func testResetSessionCallbackParams_IsCalled() {
+    func testResetGlobalCallbackParams_IsCalled_With_SessionCommand() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "resetsessioncallbackparams"])
-        XCTAssertEqual(adjInstance.resetSessionCallbackParamsCallCount, 1)
+        XCTAssertEqual(adjInstance.resetGlobalCallbackParamsCallCount, 1)
     }
     
-    func testAddSessionPartnerParams_IsCalled() {
+    func testResetGlobalCallbackParams_IsCalled_With_GlobalCommand() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "resetglobalcallbackparams"])
+        XCTAssertEqual(adjInstance.resetGlobalCallbackParamsCallCount, 1)
+    }
+    
+    func testAddGlobalPartnerParams_IsCalled_With_SessionPartner() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "addsessionpartnerparams",
                                                         "session_partner": ["fin": "bin"]])
-        XCTAssertEqual(adjInstance.addSessionPartnerParamsCallCount, 1)
+        XCTAssertEqual(adjInstance.addGlobalPartnerParamsCallCount, 1)
     }
     
-    func testAddSessionPartnerParams_IsNotCalled_WhenNoEnabledFlag() {
+    func testAddGlobalPartnerParams_IsCalled_With_GlobalPartner() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "addglobalpartnerparams",
+                                                        "global_partner": ["fin": "bin"]])
+        XCTAssertEqual(adjInstance.addGlobalPartnerParamsCallCount, 1)
+    }
+    
+    func testAddGlobalPartnerParams_IsNotCalled_WhenNoParameters() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "addsessionpartnerparams"])
-        XCTAssertEqual(adjInstance.addSessionPartnerParamsCallCount, 0)
+        XCTAssertEqual(adjInstance.addGlobalPartnerParamsCallCount, 0)
     }
     
-    func testRemoveSessionPartnerParams_IsCalled() {
+    func testRemoveGlobalPartnerParams_IsCalled_With_RemoveSessionPartner() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "removesessionpartnerparams",
                                                         "remove_session_partner_params": ["fin"]])
-        XCTAssertEqual(adjInstance.removeSessionPartnerParamsCallCount, 1)
+        XCTAssertEqual(adjInstance.removeGlobalPartnerParamsCallCount, 1)
     }
     
-    func testRemoveSessionPartnerParams_IsNotCalled_WhenNoEnabledFlag() {
+    func testRemoveGlobalPartnerParams_IsCalled_With_RemoveGlobalPartner() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "removeglobalpartnerparams",
+                                                        "remove_global_partner_params": ["fin"]])
+        XCTAssertEqual(adjInstance.removeGlobalPartnerParamsCallCount, 1)
+    }
+    
+    func testRemoveGlobalPartnerParams_IsNotCalled_WhenNoParameters() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "removesessionpartnerparams"])
-        XCTAssertEqual(adjInstance.removeSessionPartnerParamsCallCount, 0)
+        XCTAssertEqual(adjInstance.removeGlobalPartnerParamsCallCount, 0)
     }
     
-    func testResetSessionPartnerParams_IsCalled() {
+    func testResetGlobalPartnerParams_IsCalled_With_SessionCommand() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "resetsessionpartnerparams"])
-        XCTAssertEqual(adjInstance.resetSessionPartnerParamsCallCount, 1)
+        XCTAssertEqual(adjInstance.resetGlobalPartnerParamsCallCount, 1)
+    }
+    
+    func testResetGlobalPartnerParams_IsCalled_With_GlobalCommand() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "resetglobalpartnerparams"])
+        XCTAssertEqual(adjInstance.resetGlobalPartnerParamsCallCount, 1)
     }
     
 }

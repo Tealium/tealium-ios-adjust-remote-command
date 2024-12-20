@@ -26,12 +26,12 @@ public protocol AdjustCommand {
     func gdprForgetMe()
     func trackThirdPartySharing(enabled: Bool?, options: [String: [String: String]]?)
     func trackMeasurementConsent(consented: Bool)
-    func addSessionCallbackParams(_ params: [String: String])
-    func removeSessionCallbackParams(_ paramNames: [String])
-    func resetSessionCallbackParams()
-    func addSessionPartnerParams(_ params: [String: String])
-    func removeSessionPartnerParams(_ paramNames: [String])
-    func resetSessionPartnerParams()
+    func addGlobalCallbackParams(_ params: [String: String])
+    func removeGlobalCallbackParams(_ paramNames: [String])
+    func resetGlobalCallbackParams()
+    func addGlobalPartnerParams(_ params: [String: String])
+    func removeGlobalPartnerParams(_ paramNames: [String])
+    func resetGlobalPartnerParams()
 }
 
 public class AdjustInstance: AdjustCommand {
@@ -124,35 +124,35 @@ public class AdjustInstance: AdjustCommand {
         Adjust.trackMeasurementConsent(consented)
     }
     
-    public func addSessionCallbackParams(_ params: [String : String]) {
+    public func addGlobalCallbackParams(_ params: [String : String]) {
         params.forEach {
             Adjust.addGlobalCallbackParameter($0.value, forKey: $0.key)
         }
     }
     
-    public func removeSessionCallbackParams(_ paramNames: [String]) {
+    public func removeGlobalCallbackParams(_ paramNames: [String]) {
         paramNames.forEach {
             Adjust.removeGlobalCallbackParameter(forKey: $0)
         }
     }
     
-    public func resetSessionCallbackParams() {
+    public func resetGlobalCallbackParams() {
         Adjust.removeGlobalCallbackParameters()
     }
     
-    public func addSessionPartnerParams(_ params: [String : String]) {
+    public func addGlobalPartnerParams(_ params: [String : String]) {
         params.forEach {
             Adjust.addGlobalPartnerParameter($0.value, forKey: $0.key)
         }
     }
     
-    public func removeSessionPartnerParams(_ paramNames: [String]) {
+    public func removeGlobalPartnerParams(_ paramNames: [String]) {
         paramNames.forEach {
             Adjust.removeGlobalPartnerParameter(forKey: $0)
         }
     }
     
-    public func resetSessionPartnerParams() {
+    public func resetGlobalPartnerParams() {
         Adjust.removeGlobalPartnerParameters()
     }
 }

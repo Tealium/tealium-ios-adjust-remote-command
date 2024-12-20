@@ -177,35 +177,35 @@ public class AdjustRemoteCommand: RemoteCommand {
                     return
                 }
                 adjustInstance.trackMeasurementConsent(consented: consented)
-            case .addSessionCallbackParams:
-                guard let callbackParams = payload[AdjustConstants.Keys.sessionCallbackParameters] as? [String: String] else {
-                    log("\(AdjustConstants.Keys.sessionCallbackParameters) required")
+            case .addSessionCallbackParams, .addGlobalCallbackParams:
+                guard let callbackParams = (payload[AdjustConstants.Keys.globalCallbackParameters] ?? payload[AdjustConstants.Keys.sessionCallbackParameters]) as? [String: String] else {
+                    log("\(AdjustConstants.Keys.globalCallbackParameters) or \(AdjustConstants.Keys.sessionCallbackParameters) required")
                     return
                 }
-                adjustInstance.addSessionCallbackParams(callbackParams)
-            case .removeSessionCallbackParams:
-                guard let paramNames = payload[AdjustConstants.Keys.removeSessionCallbackParameters] as? [String] else {
-                    log("\(AdjustConstants.Keys.removeSessionCallbackParameters) required")
+                adjustInstance.addGlobalCallbackParams(callbackParams)
+            case .removeSessionCallbackParams, .removeGlobalCallbackParams:
+                guard let paramNames = (payload[AdjustConstants.Keys.removeGlobalCallbackParameters] ?? payload[AdjustConstants.Keys.removeSessionCallbackParameters]) as? [String] else {
+                    log("\(AdjustConstants.Keys.removeGlobalCallbackParameters) or \(AdjustConstants.Keys.removeSessionCallbackParameters) required")
                     return
                 }
-                adjustInstance.removeSessionCallbackParams(paramNames)
-            case .resetSessionCallbackParams:
-                adjustInstance.resetSessionCallbackParams()
-            case .addSessionPartnerParams:
-                guard let parnterParams = payload[AdjustConstants.Keys.sessionPartnerParameters] as? [String: String] else {
-                    log("\(AdjustConstants.Keys.sessionPartnerParameters) required")
+                adjustInstance.removeGlobalCallbackParams(paramNames)
+            case .resetSessionCallbackParams, .resetGlobalCallbackParams:
+                adjustInstance.resetGlobalCallbackParams()
+            case .addSessionPartnerParams, .addGlobalPartnerParams:
+                guard let parnterParams = (payload[AdjustConstants.Keys.globalPartnerParameters] ?? payload[AdjustConstants.Keys.sessionPartnerParameters]) as? [String: String] else {
+                    log("\(AdjustConstants.Keys.globalPartnerParameters) or \(AdjustConstants.Keys.sessionPartnerParameters) required")
                     return
                 }
-                adjustInstance.addSessionPartnerParams(parnterParams)
-            case .removeSessionPartnerParams:
-                guard let paramNames = payload[AdjustConstants.Keys.removeSessionPartnerParameters] as? [String] else {
-                    log("\(AdjustConstants.Keys.removeSessionPartnerParameters) required")
+                adjustInstance.addGlobalPartnerParams(parnterParams)
+            case .removeSessionPartnerParams, .removeGlobalPartnerParams:
+                guard let paramNames = (payload[AdjustConstants.Keys.removeGlobalPartnerParameters] ?? payload[AdjustConstants.Keys.removeSessionPartnerParameters]) as? [String] else {
+                    log("\(AdjustConstants.Keys.removeGlobalPartnerParameters) or \(AdjustConstants.Keys.removeSessionPartnerParameters) required")
                     return
                 }
-                adjustInstance.removeSessionPartnerParams(paramNames)
-            case .resetSessionPartnerParams:
-                adjustInstance.resetSessionPartnerParams()
-            default:
+                adjustInstance.removeGlobalPartnerParams(paramNames)
+            case .resetSessionPartnerParams, .resetGlobalPartnerParams:
+                adjustInstance.resetGlobalPartnerParams()
+            case .none:
                 break
             }
         }
