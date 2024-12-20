@@ -84,13 +84,16 @@ public class AdjustRemoteCommand: RemoteCommand {
                 }
                 let revenue = payload[AdjustConstants.Keys.revenue] as? Double
                 let currency = payload[AdjustConstants.Keys.currency] as? String
-                let transactionId = payload[AdjustConstants.Keys.orderId] as? String
+                let orderId = payload[AdjustConstants.Keys.orderId] as? String
+                let transactionId = payload[AdjustConstants.Keys.transactionId] as? String
+                let deduplicationId = payload[AdjustConstants.Keys.deduplicationId] as? String
                 let callbackId = payload[AdjustConstants.Keys.callbackId] as? String
                 let callbackParams = payload[AdjustConstants.Keys.callbackParameters] as? [String: String]
                 let partnerParams = payload[AdjustConstants.Keys.partnerParameters] as? [String: String]
                 
                 sendEvent(eventToken,
-                          transactionId: transactionId,
+                          transactionId: transactionId ?? orderId,
+                          deduplucationId: deduplicationId ?? orderId,
                           revenue: revenue,
                           currency: currency,
                           callbackParams: callbackParams,
@@ -271,11 +274,15 @@ public class AdjustRemoteCommand: RemoteCommand {
         if let isSKAdNetworkHandlingActive = settings[AdjustConstants.Keys.isSKAdNetworkHandlingActive] as? Bool, !isSKAdNetworkHandlingActive {
             config.disableSkanAttribution()
         }
+        if let deduplicationIdsMaxSize = settings[AdjustConstants.Keys.deduplicationIdMaxSize] as? Int {
+            config.eventDeduplicationIdsMaxSize = deduplicationIdsMaxSize
+        }
         adjustInstance?.initialize(with: config)
     }
     
     public func sendEvent(_ token: String,
                           transactionId: String?,
+                          deduplucationId: String?,
                           revenue: Double?,
                           currency: String?,
                           callbackParams: [String : String]?,
@@ -299,6 +306,9 @@ public class AdjustRemoteCommand: RemoteCommand {
         }
         if let callbackId = callbackId {
             event.setCallbackId(callbackId)
+        }
+        if let deduplucationId {
+            event.setDeduplicationId(deduplucationId)
         }
         adjustInstance?.sendEvent(event)
     }
