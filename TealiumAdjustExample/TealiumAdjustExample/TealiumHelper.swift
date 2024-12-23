@@ -18,8 +18,8 @@ enum TealiumConfiguration {
     static let environment = "dev"
 }
 
-class StringhifyData: DispatchValidator {
-    var id: String = "Stringhifier"
+class StringifyData: DispatchValidator {
+    var id: String = "Stringifier"
     func shouldQueue(request: any TealiumRequest) -> (Bool, [String : Any]?) {
         guard let request = request as? TealiumTrackRequest else {
             return (false, nil)
@@ -67,7 +67,7 @@ class TealiumHelper: NSObject {
         config.logLevel = .info
         config.collectors = [Collectors.Lifecycle, Collectors.Attribution]
         config.dispatchers = [Dispatchers.Collect, Dispatchers.RemoteCommands]
-        config.dispatchValidators = [StringhifyData()]
+        config.dispatchValidators = [StringifyData()]
         // Optional: Set delegate and tracking auth callback
         adjustRemoteCommand.adjustDelegate = self
         adjustRemoteCommand.trackingAuthorizationCompletion = { status in
