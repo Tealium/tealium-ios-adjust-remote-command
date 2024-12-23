@@ -184,7 +184,8 @@ public class AdjustRemoteCommand: RemoteCommand {
                 }
                 adjustInstance.addGlobalCallbackParams(callbackParams)
             case .removeSessionCallbackParams, .removeGlobalCallbackParams:
-                guard let paramNames = (payload[AdjustConstants.Keys.removeGlobalCallbackParameters] ?? payload[AdjustConstants.Keys.removeSessionCallbackParameters]) as? [String] else {
+                guard let paramNames = (payload[AdjustConstants.Keys.removeGlobalCallbackParameters] ??
+                                        payload[AdjustConstants.Keys.removeSessionCallbackParameters]) as? [String] else {
                     log("\(AdjustConstants.Keys.removeGlobalCallbackParameters) or \(AdjustConstants.Keys.removeSessionCallbackParameters) required")
                     return
                 }
@@ -192,13 +193,15 @@ public class AdjustRemoteCommand: RemoteCommand {
             case .resetSessionCallbackParams, .resetGlobalCallbackParams:
                 adjustInstance.resetGlobalCallbackParams()
             case .addSessionPartnerParams, .addGlobalPartnerParams:
-                guard let parnterParams = (payload[AdjustConstants.Keys.globalPartnerParameters] ?? payload[AdjustConstants.Keys.sessionPartnerParameters]) as? [String: String] else {
+                guard let parnterParams = (payload[AdjustConstants.Keys.globalPartnerParameters] ??
+                                           payload[AdjustConstants.Keys.sessionPartnerParameters]) as? [String: String] else {
                     log("\(AdjustConstants.Keys.globalPartnerParameters) or \(AdjustConstants.Keys.sessionPartnerParameters) required")
                     return
                 }
                 adjustInstance.addGlobalPartnerParams(parnterParams)
             case .removeSessionPartnerParams, .removeGlobalPartnerParams:
-                guard let paramNames = (payload[AdjustConstants.Keys.removeGlobalPartnerParameters] ?? payload[AdjustConstants.Keys.removeSessionPartnerParameters]) as? [String] else {
+                guard let paramNames = (payload[AdjustConstants.Keys.removeGlobalPartnerParameters] ??
+                                        payload[AdjustConstants.Keys.removeSessionPartnerParameters]) as? [String] else {
                     log("\(AdjustConstants.Keys.removeGlobalPartnerParameters) or \(AdjustConstants.Keys.removeSessionPartnerParameters) required")
                     return
                 }

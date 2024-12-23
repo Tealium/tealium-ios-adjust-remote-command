@@ -21,7 +21,7 @@ struct EventsView: View {
                 TealiumHelper.trackEvent(title: "contact",
                                          data: ["event_token": token,
                                                 "favorite_color": "Red",
-                                                "num_of_pets": 3,
+                                                "num_of_pets": "3",
                                                 "callback": ["hello": "hello"]])
             }
             TextButtonView(title: "Send Push Token") {

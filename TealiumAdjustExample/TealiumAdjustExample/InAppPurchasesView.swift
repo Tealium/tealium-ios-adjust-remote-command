@@ -27,7 +27,7 @@ struct InAppPurchasesView: View {
                                                 "order_currency": "USD",
                                                 "sales_region": "US",
                                                 "customer_id": "cust123",
-                                                "customer_is_member": true,
+                                                "customer_is_member": "true",
                                                 "conversion_value": Int.random(in: 1...12)])
             }
             TextButtonView(title: "Track Ad Revenue") {
