@@ -71,7 +71,6 @@ public enum AdjustConstants {
         static let revenue = "revenue"
         static let currency = "currency"
         static let orderId = "order_id"
-        static let transactionId = "transaction_id"
         static let deduplicationId = "deduplication_id"
         static let deduplicationIdMaxSize = "deduplication_id_max_size"
         static let salesRegion = "sales_region"

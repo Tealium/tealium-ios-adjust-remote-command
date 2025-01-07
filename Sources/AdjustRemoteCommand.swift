@@ -85,14 +85,13 @@ public class AdjustRemoteCommand: RemoteCommand {
                 let revenue = payload[AdjustConstants.Keys.revenue] as? Double
                 let currency = payload[AdjustConstants.Keys.currency] as? String
                 let orderId = payload[AdjustConstants.Keys.orderId] as? String
-                let transactionId = payload[AdjustConstants.Keys.transactionId] as? String
                 let deduplicationId = payload[AdjustConstants.Keys.deduplicationId] as? String
                 let callbackId = payload[AdjustConstants.Keys.callbackId] as? String
                 let callbackParams = payload[AdjustConstants.Keys.callbackParameters] as? [String: String]
                 let partnerParams = payload[AdjustConstants.Keys.partnerParameters] as? [String: String]
                 
                 sendEvent(eventToken,
-                          transactionId: transactionId ?? orderId,
+                          orderId: orderId,
                           deduplicationId: deduplicationId ?? orderId,
                           revenue: revenue,
                           currency: currency,
@@ -284,7 +283,7 @@ public class AdjustRemoteCommand: RemoteCommand {
     }
     
     public func sendEvent(_ token: String,
-                          transactionId: String?,
+                          orderId: String?,
                           deduplicationId: String?,
                           revenue: Double?,
                           currency: String?,
@@ -294,7 +293,7 @@ public class AdjustRemoteCommand: RemoteCommand {
         guard let event = ADJEvent(eventToken: token) else {
             return
         }
-        if let transactionId = transactionId {
+        if let transactionId = orderId {
             event.setTransactionId(transactionId)
         }
         if let revenue = revenue,

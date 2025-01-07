@@ -141,16 +141,6 @@ class TealiumAdjustTests: XCTestCase {
         XCTAssertEqual(adjInstance.adjEvent?.deduplicationId, "123")
     }
 
-    func testSendEvent_transaction_id_has_priority_over_orderId() {
-        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackevent",
-                                                        "event_token": "abc123",
-                                                        "transaction_id": "456",
-                                                        "order_id": "123"])
-        XCTAssertEqual(adjInstance.sendEventCallCount, 1)
-        XCTAssertEqual(adjInstance.adjEvent?.transactionId, "456")
-        XCTAssertEqual(adjInstance.adjEvent?.deduplicationId, "123")
-    }
-
     func testSendEvent_deduplication_id_has_priority_over_orderId() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackevent",
                                                         "event_token": "abc123",

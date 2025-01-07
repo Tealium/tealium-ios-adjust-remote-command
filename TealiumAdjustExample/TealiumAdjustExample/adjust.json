@@ -17,7 +17,7 @@
     "order_total": "revenue",
     "order_total_string": "callback.orderTotal",
     "order_currency": "currency",
-    "order_id": "transaction_id,callback.transaction_id,deduplication_id,callback.deduplication_id",
+    "order_id": "order_id,callback.order_id,deduplication_id,callback.deduplication_id",
     "conversion_value": "conversion_value",
     "sales_region": "sales_region",
     "callback_id": "callback_id",
