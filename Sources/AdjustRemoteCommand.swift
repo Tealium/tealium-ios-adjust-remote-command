@@ -19,6 +19,9 @@ import TealiumCore
 import TealiumRemoteCommands
 #endif
 
+@available(iOS 14.0, *)
+private let logger = Logger()
+
 public class AdjustRemoteCommand: RemoteCommand {
     
     public override var version: String {
@@ -35,6 +38,7 @@ public class AdjustRemoteCommand: RemoteCommand {
             }
         }
     }
+    
     
     public init(adjustInstance: AdjustCommand = AdjustInstance(),
                 type: RemoteCommandType = .webview) {
@@ -80,12 +84,20 @@ public class AdjustRemoteCommand: RemoteCommand {
                 }
                 let revenue = payload[AdjustConstants.Keys.revenue] as? Double
                 let currency = payload[AdjustConstants.Keys.currency] as? String
-                let transactionId = payload[AdjustConstants.Keys.orderId] as? String
+                let orderId = payload[AdjustConstants.Keys.orderId] as? String
+                let deduplicationId = payload[AdjustConstants.Keys.deduplicationId] as? String
                 let callbackId = payload[AdjustConstants.Keys.callbackId] as? String
                 let callbackParams = payload[AdjustConstants.Keys.callbackParameters] as? [String: String]
                 let partnerParams = payload[AdjustConstants.Keys.partnerParameters] as? [String: String]
                 
-                sendEvent(eventToken, transactionId: transactionId, revenue: revenue, currency: currency, callbackParams: callbackParams, partnerParams: partnerParams, callbackId: callbackId)
+                sendEvent(eventToken,
+                          orderId: orderId,
+                          deduplicationId: deduplicationId ?? orderId,
+                          revenue: revenue,
+                          currency: currency,
+                          callbackParams: callbackParams,
+                          partnerParams: partnerParams,
+                          callbackId: callbackId)
             case .trackSubscription:
                 guard let price = payload[AdjustConstants.Keys.revenue] as? Double,
                       let currency = payload[AdjustConstants.Keys.currency] as? String,
@@ -93,22 +105,26 @@ public class AdjustRemoteCommand: RemoteCommand {
                     log("revenue, currency, and order_id required")
                     return
                 }
-                guard let receipt = payload[AdjustConstants.Keys.receipt] as? Data ?? appStoreReiept else {
-                    log("\(AdjustConstants.Keys.receipt) required")
-                    return
-                }
                 let salesRegion = payload[AdjustConstants.Keys.salesRegion] as? String
                 let purchaseTime = payload[AdjustConstants.Keys.purchaseTime] as? Double ?? 0.0
                 let callbackParams = payload[AdjustConstants.Keys.callbackParameters] as? [String: String]
                 let partnerParams = payload[AdjustConstants.Keys.partnerParameters] as? [String: String]
                 
-                trackSubscription(price: price, currency: currency, transactionId: transactionId, receipt: receipt, transactionDate: Date(timeIntervalSince1970: purchaseTime), salesRegion: salesRegion, callbackParams: callbackParams, partnerParams: partnerParams)
+                trackSubscription(price: price,
+                                  currency: currency,
+                                  transactionId: transactionId,
+                                  transactionDate: Date(timeIntervalSince1970: purchaseTime),
+                                  salesRegion: salesRegion,
+                                  callbackParams: callbackParams,
+                                  partnerParams: partnerParams)
             case .updateConversionValue:
                 guard let conversionValue = payload[AdjustConstants.Keys.conversionValue] as? Int else {
                     log("\(AdjustConstants.Keys.conversionValue) required")
                     return
                 }
-                adjustInstance.updateConversionValue(conversionValue)
+                adjustInstance.updateConversionValue(conversionValue,
+                                                     coarseValue: payload[AdjustConstants.Keys.coarseValue] as? String,
+                                                     lockWindow: payload[AdjustConstants.Keys.lockWindow] as? Bool)
             case .appWillOpenUrl:
                 guard let urlString = payload[AdjustConstants.Keys.deeplinkOpenUrl] as? String,
                       let url = URL(string: urlString) else {
@@ -118,11 +134,14 @@ public class AdjustRemoteCommand: RemoteCommand {
                 adjustInstance.appWillOpen(url)
             case .trackAdRevenue:
                 guard let source = payload[AdjustConstants.Keys.adRevenueSource] as? String,
-                      let payload = payload[AdjustConstants.Keys.adRevenuePayload] as? [String: Any] else {
-                    log("\(AdjustConstants.Keys.adRevenueSource) and \(AdjustConstants.Keys.adRevenuePayload) required")
+                      let adRevenue = ADJAdRevenue(source: source) else {
+                    log("\(AdjustConstants.Keys.adRevenueSource) required")
                     return
                 }
-                adjustInstance.trackAdRevenue(source, payload: payload)
+                if let adRevenuePayload = payload[AdjustConstants.Keys.adRevenuePayload] as? [String: Any] {
+                    setPayload(adRevenuePayload, to: adRevenue)
+                }
+                adjustInstance.trackAdRevenue(adRevenue)
             case .setPushToken:
                 guard let token = payload[AdjustConstants.Keys.pushToken] as? String else {
                     log("\(AdjustConstants.Keys.pushToken) required")
@@ -157,36 +176,68 @@ public class AdjustRemoteCommand: RemoteCommand {
                     return
                 }
                 adjustInstance.trackMeasurementConsent(consented: consented)
-            case .addSessionCallbackParams:
-                guard let callbackParams = payload[AdjustConstants.Keys.sessionCallbackParameters] as? [String: String] else {
-                    log("\(AdjustConstants.Keys.sessionCallbackParameters) required")
+            case .addSessionCallbackParams, .addGlobalCallbackParams:
+                guard let callbackParams = (payload[AdjustConstants.Keys.globalCallbackParameters] ?? payload[AdjustConstants.Keys.sessionCallbackParameters]) as? [String: String] else {
+                    log("\(AdjustConstants.Keys.globalCallbackParameters) or \(AdjustConstants.Keys.sessionCallbackParameters) required")
                     return
                 }
-                adjustInstance.addSessionCallbackParams(callbackParams)
-            case .removeSessionCallbackParams:
-                guard let paramNames = payload[AdjustConstants.Keys.removeSessionCallbackParameters] as? [String] else {
-                    log("\(AdjustConstants.Keys.removeSessionCallbackParameters) required")
+                adjustInstance.addGlobalCallbackParams(callbackParams)
+            case .removeSessionCallbackParams, .removeGlobalCallbackParams:
+                guard let paramNames = (payload[AdjustConstants.Keys.removeGlobalCallbackParameters] ??
+                                        payload[AdjustConstants.Keys.removeSessionCallbackParameters]) as? [String] else {
+                    log("\(AdjustConstants.Keys.removeGlobalCallbackParameters) or \(AdjustConstants.Keys.removeSessionCallbackParameters) required")
                     return
                 }
-                adjustInstance.removeSessionCallbackParams(paramNames)
-            case .resetSessionCallbackParams:
-                adjustInstance.resetSessionCallbackParams()
-            case .addSessionPartnerParams:
-                guard let parnterParams = payload[AdjustConstants.Keys.sessionPartnerParameters] as? [String: String] else {
-                    log("\(AdjustConstants.Keys.sessionPartnerParameters) required")
+                adjustInstance.removeGlobalCallbackParams(paramNames)
+            case .resetSessionCallbackParams, .resetGlobalCallbackParams:
+                adjustInstance.resetGlobalCallbackParams()
+            case .addSessionPartnerParams, .addGlobalPartnerParams:
+                guard let partnerParams = (payload[AdjustConstants.Keys.globalPartnerParameters] ??
+                                           payload[AdjustConstants.Keys.sessionPartnerParameters]) as? [String: String] else {
+                    log("\(AdjustConstants.Keys.globalPartnerParameters) or \(AdjustConstants.Keys.sessionPartnerParameters) required")
                     return
                 }
-                adjustInstance.addSessionPartnerParams(parnterParams)
-            case .removeSessionPartnerParams:
-                guard let paramNames = payload[AdjustConstants.Keys.removeSessionPartnerParameters] as? [String] else {
-                    log("\(AdjustConstants.Keys.removeSessionPartnerParameters) required")
+                adjustInstance.addGlobalPartnerParams(partnerParams)
+            case .removeSessionPartnerParams, .removeGlobalPartnerParams:
+                guard let paramNames = (payload[AdjustConstants.Keys.removeGlobalPartnerParameters] ??
+                                        payload[AdjustConstants.Keys.removeSessionPartnerParameters]) as? [String] else {
+                    log("\(AdjustConstants.Keys.removeGlobalPartnerParameters) or \(AdjustConstants.Keys.removeSessionPartnerParameters) required")
                     return
                 }
-                adjustInstance.removeSessionPartnerParams(paramNames)
-            case .resetSessionPartnerParams:
-                adjustInstance.resetSessionPartnerParams()
-            default:
+                adjustInstance.removeGlobalPartnerParams(paramNames)
+            case .resetSessionPartnerParams, .resetGlobalPartnerParams:
+                adjustInstance.resetGlobalPartnerParams()
+            case .none:
                 break
+            }
+        }
+    }
+
+    func setPayload(_ payload: [String : Any], to adRevenue: ADJAdRevenue) {
+        if let unit = payload[AdjustConstants.Keys.adRevenueUnit] as? String {
+            adRevenue.setAdRevenueUnit(unit)
+        }
+        if let network = payload[AdjustConstants.Keys.adRevenueNetwork] as? String {
+            adRevenue.setAdRevenueNetwork(network)
+        }
+        if let revenueAmount = payload[AdjustConstants.Keys.adRevenueAmount] as? NSNumber,
+            let currency = payload[AdjustConstants.Keys.adRevenueCurrency] as? String {
+            adRevenue.setRevenue(revenueAmount.doubleValue, currency: currency)
+        }
+        if let placement = payload[AdjustConstants.Keys.adRevenuePlacement] as? String {
+            adRevenue.setAdRevenuePlacement(placement)
+        }
+        if let impressionCount = payload[AdjustConstants.Keys.adRevenueImpressionsCount] as? NSNumber {
+            adRevenue.setAdImpressionsCount(impressionCount.int32Value)
+        }
+        if let callbackParameters = payload[AdjustConstants.Keys.callbackParameters] as? [String: String] {
+            for parameter in callbackParameters {
+                adRevenue.addCallbackParameter(parameter.key, value: parameter.value)
+            }
+        }
+        if let partnerParameters = payload[AdjustConstants.Keys.partnerParameters] as? [String: String] {
+            for parameter in partnerParameters {
+                adRevenue.addPartnerParameter(parameter.key, value: parameter.value)
             }
         }
     }
@@ -199,39 +250,41 @@ public class AdjustRemoteCommand: RemoteCommand {
         }
         config.logLevel = logLevel
         config.delegate = adjustDelegate
-        if let delayStartTime = settings[AdjustConstants.Keys.delayStart] as? Double {
-            config.delayStart = delayStartTime
-        }
-        if let appSecret = settings[AdjustConstants.Keys.secretId] as? Int {
-            let secrets = Secrets(from: settings)
-            config.setAppSecret(UInt(appSecret), info1: secrets.one, info2: secrets.two, info3: secrets.three, info4: secrets.four)
-        }
         if let defaultTracker = settings[AdjustConstants.Keys.defaultTracker] as? String {
             config.defaultTracker = defaultTracker
         }
         if let externalDeviceId = settings[AdjustConstants.Keys.externalDeviceId] as? String {
             config.externalDeviceId = externalDeviceId
         }
-        if let eventBufferingEnabled = settings[AdjustConstants.Keys.eventBufferingEnabled] as? Bool {
-            config.eventBufferingEnabled = eventBufferingEnabled
+        if let sendInBackground = settings[AdjustConstants.Keys.sendInBackground] as? Bool, sendInBackground {
+            config.enableSendingInBackground()
         }
-        if let sendInBackground = settings[AdjustConstants.Keys.sendInBackground] as? Bool {
-            config.sendInBackground = sendInBackground
+        if let strategyKey = settings[AdjustConstants.Keys.urlStrategy] as? String,
+           let strategy = UrlStrategy.defaultStrategies[strategyKey] {
+            config.setUrlStrategy(strategy.domains, useSubdomains: strategy.useSubdomains, isDataResidency: strategy.isDataResidency)
+        } else if let domains = settings[AdjustConstants.Keys.urlStrategyDomains] as? [String],
+                  let useSubdomains = settings[AdjustConstants.Keys.urlStrategyUseSubdomains] as? Bool,
+                  let isDataResidency = settings[AdjustConstants.Keys.urlStrategyIsResidency] as? Bool {
+            config.setUrlStrategy(domains, useSubdomains: useSubdomains, isDataResidency: isDataResidency)
         }
-        if let residency = settings[AdjustConstants.Keys.urlStrategy] as? String {
-            config.urlStrategy = residency
+        if let allowAdServicesInfoReading = settings[AdjustConstants.Keys.allowAdServicesInfoReading] as? Bool, !allowAdServicesInfoReading {
+            config.disableAdServices()
         }
-        config.allowAdServicesInfoReading = settings[AdjustConstants.Keys.allowAdServicesInfoReading] as? Bool ?? false
-        config.allowIdfaReading = settings[AdjustConstants.Keys.allowIdfaReading] as? Bool ?? false
-        let isSKAdNetworkHandlingActive = settings[AdjustConstants.Keys.isSKAdNetworkHandlingActive] as? Bool ?? true
-        if !isSKAdNetworkHandlingActive {
-            config.deactivateSKAdNetworkHandling()
+        if let allowIdfaReading = settings[AdjustConstants.Keys.allowIdfaReading] as? Bool, !allowIdfaReading {
+            config.disableIdfaReading()
+        }
+        if let isSKAdNetworkHandlingActive = settings[AdjustConstants.Keys.isSKAdNetworkHandlingActive] as? Bool, !isSKAdNetworkHandlingActive {
+            config.disableSkanAttribution()
+        }
+        if let deduplicationIdsMaxSize = settings[AdjustConstants.Keys.deduplicationIdMaxSize] as? Int {
+            config.eventDeduplicationIdsMaxSize = deduplicationIdsMaxSize
         }
         adjustInstance?.initialize(with: config)
     }
     
     public func sendEvent(_ token: String,
-                          transactionId: String?,
+                          orderId: String?,
+                          deduplicationId: String?,
                           revenue: Double?,
                           currency: String?,
                           callbackParams: [String : String]?,
@@ -240,7 +293,7 @@ public class AdjustRemoteCommand: RemoteCommand {
         guard let event = ADJEvent(eventToken: token) else {
             return
         }
-        if let transactionId = transactionId {
+        if let transactionId = orderId {
             event.setTransactionId(transactionId)
         }
         if let revenue = revenue,
@@ -256,21 +309,22 @@ public class AdjustRemoteCommand: RemoteCommand {
         if let callbackId = callbackId {
             event.setCallbackId(callbackId)
         }
+        if let deduplicationId {
+            event.setDeduplicationId(deduplicationId)
+        }
         adjustInstance?.sendEvent(event)
     }
     
     public func trackSubscription(price: Double,
                                   currency: String,
                                   transactionId: String,
-                                  receipt: Data,
                                   transactionDate: Date?,
                                   salesRegion: String?,
                                   callbackParams: [String : String]?,
                                   partnerParams: [String : String]?) {
-        guard let subscription = ADJSubscription(price: NSDecimalNumber(value: price),
-                                                 currency: currency,
-                                                 transactionId: transactionId,
-                                                 andReceipt: receipt) else {
+        guard let subscription = ADJAppStoreSubscription(price: NSDecimalNumber(value: price),
+                                                         currency: currency,
+                                                         transactionId: transactionId) else {
             return
         }
         if let salesRegion = salesRegion {
@@ -286,20 +340,7 @@ public class AdjustRemoteCommand: RemoteCommand {
 
         adjustInstance?.trackSubscription(subscription)
     }
-    
-    private var appStoreReiept: Data? {
-        if let appStoreReceiptURL = Bundle.main.appStoreReceiptURL,
-            FileManager.default.fileExists(atPath: appStoreReceiptURL.path) {
-            do {
-               return try Data(contentsOf: appStoreReceiptURL, options: .alwaysMapped)
-            }
-            catch {
-                log("Couldn't read receipt data with error: " + error.localizedDescription)
-            }
-        }
-        return nil
-    }
-    
+
     private var logLevel: TealiumLogLevel {
         guard let tealium = TealiumInstanceManager.shared.tealiumInstances.first?.value,
               let environment = tealium.dataLayer.all[TealiumDataKey.environment] as? String else {
@@ -307,54 +348,87 @@ public class AdjustRemoteCommand: RemoteCommand {
         }
        return environment == "prod" ? TealiumLogLevel(from: "error") : TealiumLogLevel(from: "info")
     }
-    
+
+    private var logType: OSLogType? {
+        switch loggerLevel {
+        case .debug:
+                .debug
+        case .error:
+                .error
+        case .info:
+                .info
+        case .fault:
+                .fault
+        default:
+            nil
+        }
+    }
     private func log(_ message: String) {
-        os_log("%{public}@",
-               type: OSLogType(UInt8(loggerLevel.rawValue)),
-               "\(AdjustConstants.description): \(message)")
+        guard let type = logType else {
+            return
+        }
+        if #available(iOS 14.0, *) {
+            logger.log(level: type,
+                         "\(AdjustConstants.description, privacy: .public): \(message, privacy: .public)")
+        } else {
+            os_log("%{public}@",
+                   type: type,
+                   "\(AdjustConstants.description): \(message)")
+        }
     }
     
 }
-
-fileprivate struct Secrets {
-    var one: UInt
-    var two: UInt
-    var three: UInt
-    var four: UInt
-    
-    init(from settings: [String: Any]) {
-        let one = settings[AdjustConstants.Keys.secretInfoOne] as? Int ?? 0
-        let two = settings[AdjustConstants.Keys.secretInfoTwo] as? Int ?? 0
-        let three = settings[AdjustConstants.Keys.secretInfoThree] as? Int ?? 0
-        let four = settings[AdjustConstants.Keys.secretInfoFour] as? Int ?? 0
-        self.one = UInt(one)
-        self.two = UInt(two)
-        self.three = UInt(three)
-        self.four = UInt(four)
-    }
-}
-
 fileprivate extension ADJLogLevel {
     init(from logLevel: String?) {
         guard let logLevel = logLevel else {
-            self = ADJLogLevelSuppress
+            self = ADJLogLevel.suppress
             return
         }
         switch logLevel {
         case "verbose":
-            self = ADJLogLevelVerbose
+            self = ADJLogLevel.verbose
         case "debug":
-            self = ADJLogLevelDebug
+            self = ADJLogLevel.debug
         case "info":
-            self = ADJLogLevelInfo
+            self = ADJLogLevel.info
         case "warn":
-            self = ADJLogLevelWarn
+            self = ADJLogLevel.warn
         case "error":
-            self = ADJLogLevelError
+            self = ADJLogLevel.error
         case "assert":
-            self = ADJLogLevelAssert
+            self = ADJLogLevel.assert
         default:
-            self = ADJLogLevelSuppress
+            self = ADJLogLevel.suppress
         }
     }
+}
+
+struct UrlStrategy {
+    
+    static let defaultStrategies: [String: Self] = [
+        "DataResidencyEU": UrlStrategy(domains: ["eu.adjust.com"],
+                                       useSubdomains: true,
+                                       isDataResidency: true),
+        "DataResidencyTR": UrlStrategy(domains: ["tr.adjust.com"],
+                                       useSubdomains: true,
+                                       isDataResidency: true),
+        "ADJDataResidencyUS": UrlStrategy(domains: ["us.adjust.com"],
+                                          useSubdomains: true,
+                                          isDataResidency: true),
+        "UrlStrategyChina": UrlStrategy(domains: ["adjust.world", "adjust.com"],
+                                        useSubdomains: true,
+                                        isDataResidency: false),
+        "UrlStrategyCn": UrlStrategy(domains: ["adjust.cn", "adjust.com"],
+                                     useSubdomains: true,
+                                     isDataResidency: false),
+        "UrlStrategyCnOnly": UrlStrategy(domains: ["adjust.cn"],
+                                         useSubdomains: true,
+                                         isDataResidency: false),
+        "UrlStrategyIndia": UrlStrategy(domains: ["adjust.net.in", "adjust.com"],
+                                        useSubdomains: true,
+                                        isDataResidency: false)
+    ]
+    let domains: [String]
+    let useSubdomains: Bool
+    let isDataResidency: Bool
 }

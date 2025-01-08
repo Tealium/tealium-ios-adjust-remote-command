@@ -10,12 +10,36 @@ import TealiumSwift
 import TealiumAdjust
 import AdSupport
 import iAd
-import Adjust
+import AdjustSdk
 
 enum TealiumConfiguration {
     static let account = "tealiummobile"
     static let profile = "demo"
     static let environment = "dev"
+}
+
+class StringifyData: DispatchValidator {
+    var id: String = "Stringifier"
+    func shouldQueue(request: any TealiumRequest) -> (Bool, [String : Any]?) {
+        guard let request = request as? TealiumTrackRequest else {
+            return (false, nil)
+        }
+        let trackDictionary = request.trackDictionary
+        var result: [String: Any] = [:]
+        if let orderTotal = trackDictionary["order_total"] {
+            result["order_total_string"] = String(describing: orderTotal)
+        }
+        return (false, result)
+    }
+    func shouldDrop(request: any TealiumRequest) -> Bool {
+        return false
+    }
+    
+    func shouldPurge(request: any TealiumRequest) -> Bool {
+        return false
+    }
+    
+    
 }
 
 class TealiumHelper: NSObject {
@@ -43,7 +67,7 @@ class TealiumHelper: NSObject {
         config.logLevel = .info
         config.collectors = [Collectors.Lifecycle, Collectors.Attribution]
         config.dispatchers = [Dispatchers.Collect, Dispatchers.RemoteCommands]
-        
+        config.dispatchValidators = [StringifyData()]
         // Optional: Set delegate and tracking auth callback
         adjustRemoteCommand.adjustDelegate = self
         adjustRemoteCommand.trackingAuthorizationCompletion = { status in

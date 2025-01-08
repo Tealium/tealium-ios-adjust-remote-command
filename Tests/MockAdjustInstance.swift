@@ -64,17 +64,18 @@ class MockAdjustInstance: AdjustCommand {
     var gdprForgetMeCallCount = 0
     var trackThirdPartySharingCallCount = 0
     var trackMeasurementConsentCallCount = 0
-    var addSessionCallbackParamsCallCount = 0
-    var removeSessionCallbackParamsCallCount = 0
-    var resetSessionCallbackParamsCallCount = 0
-    var addSessionPartnerParamsCallCount = 0
-    var removeSessionPartnerParamsCallCount = 0
-    var resetSessionPartnerParamsCallCount = 0
+    var addGlobalCallbackParamsCallCount = 0
+    var removeGlobalCallbackParamsCallCount = 0
+    var resetGlobalCallbackParamsCallCount = 0
+    var addGlobalPartnerParamsCallCount = 0
+    var removeGlobalPartnerParamsCallCount = 0
+    var resetGlobalPartnerParamsCallCount = 0
     
     var adjustDelegate: (AdjustDelegate & NSObjectProtocol)?
     var adjConfig: ADJConfig?
     var adjEvent: ADJEvent?
-    var adjSubscription: ADJSubscription?
+    var adjSubscription: ADJAppStoreSubscription?
+    var adRevenue: ADJAdRevenue?
     
     
     func initialize(with config: ADJConfig) {
@@ -87,7 +88,7 @@ class MockAdjustInstance: AdjustCommand {
         sendEventCallCount += 1
     }
     
-    func trackSubscription(_ subscription: ADJSubscription) {
+    func trackSubscription(_ subscription: ADJAppStoreSubscription) {
         adjSubscription = subscription
         trackSubscriptionCallCount += 1
     }
@@ -96,7 +97,7 @@ class MockAdjustInstance: AdjustCommand {
         requestTrackingAuthorizationCallCount += 1
     }
     
-    func updateConversionValue(_ value: Int) {
+    func updateConversionValue(_ value: Int, coarseValue: String?, lockWindow: Bool?) {
         updateConversionValueCallCount += 1
     }
     
@@ -104,7 +105,8 @@ class MockAdjustInstance: AdjustCommand {
         appWillOpenCallCount += 1
     }
     
-    func trackAdRevenue(_ source: String, payload: [String : Any]) {
+    func trackAdRevenue(_ adRevenue: ADJAdRevenue) {
+        self.adRevenue = adRevenue
         trackAdRevenueCallCount += 1
     }
     
@@ -132,28 +134,28 @@ class MockAdjustInstance: AdjustCommand {
         trackMeasurementConsentCallCount += 1
     }
     
-    func addSessionCallbackParams(_ params: [String : String]) {
-        addSessionCallbackParamsCallCount += 1
+    func addGlobalCallbackParams(_ params: [String : String]) {
+        addGlobalCallbackParamsCallCount += 1
     }
     
-    func removeSessionCallbackParams(_ paramNames: [String]) {
-        removeSessionCallbackParamsCallCount += 1
+    func removeGlobalCallbackParams(_ paramNames: [String]) {
+        removeGlobalCallbackParamsCallCount += 1
     }
     
-    func resetSessionCallbackParams() {
-        resetSessionCallbackParamsCallCount += 1
+    func resetGlobalCallbackParams() {
+        resetGlobalCallbackParamsCallCount += 1
     }
     
-    func addSessionPartnerParams(_ params: [String : String]) {
-        addSessionPartnerParamsCallCount += 1
+    func addGlobalPartnerParams(_ params: [String : String]) {
+        addGlobalPartnerParamsCallCount += 1
     }
     
-    func removeSessionPartnerParams(_ paramNames: [String]) {
-        removeSessionPartnerParamsCallCount += 1
+    func removeGlobalPartnerParams(_ paramNames: [String]) {
+        removeGlobalPartnerParamsCallCount += 1
     }
     
-    func resetSessionPartnerParams() {
-        resetSessionPartnerParamsCallCount += 1
+    func resetGlobalPartnerParams() {
+        resetGlobalPartnerParamsCallCount += 1
     }
 
 }

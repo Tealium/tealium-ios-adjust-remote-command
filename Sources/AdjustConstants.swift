@@ -12,7 +12,7 @@ public enum AdjustConstants {
     static let commandName = "command_name"
     static let separator: Character = ","
     static let commandId = "adjust"
-    static let version = "1.3.0"
+    static let version = "1.4.0"
     static let description = "Adjust Remote Command"
     
     enum Commands: String {
@@ -28,25 +28,31 @@ public enum AdjustConstants {
         case gdprForgetMe = "gdprforgetme"
         case setThirdPartySharing = "setthirdpartysharing"
         case trackMeasurementConsent = "trackmeasurementconsent"
+        
         case addSessionCallbackParams = "addsessioncallbackparams"
+        case addGlobalCallbackParams = "addglobalcallbackparams"
+        
         case removeSessionCallbackParams = "removesessioncallbackparams"
+        case removeGlobalCallbackParams = "removeglobalcallbackparams"
+        
         case resetSessionCallbackParams = "resetsessioncallbackparams"
+        case resetGlobalCallbackParams = "resetglobalcallbackparams"
+        
         case addSessionPartnerParams = "addsessionpartnerparams"
+        case addGlobalPartnerParams = "addglobalpartnerparams"
+        
         case removeSessionPartnerParams = "removesessionpartnerparams"
+        case removeGlobalPartnerParams = "removeglobalpartnerparams"
+        
         case resetSessionPartnerParams = "resetsessionpartnerparams"
+        case resetGlobalPartnerParams = "resetglobalpartnerparams"
     }
 
     enum Keys {
         static let apiToken = "api_token"
         static let sandbox = "sandbox"
         static let settings = "settings"
-        static let secretId = "app_secret"
-        static let secretInfoOne = "app_secret_info_1"
-        static let secretInfoTwo = "app_secret_info_2"
-        static let secretInfoThree = "app_secret_info_3"
-        static let secretInfoFour = "app_secret_info_4"
         static let logLevel = "log_level"
-        static let delayStart = "delay_start"
         static let allowAdServicesInfoReading = "allow_ad_services"
         static let allowIdfaReading = "allow_idfa"
         static let isSKAdNetworkHandlingActive = "sk_ad_network_active"
@@ -55,6 +61,8 @@ public enum AdjustConstants {
         static let eventBufferingEnabled = "event_buffering_enabled"
         static let sendInBackground = "send_in_background"
         static let conversionValue = "conversion_value"
+        static let coarseValue = "coarse_value"
+        static let lockWindow = "lock_window"
         static let deeplinkOpenUrl = "deeplink_open_url"
         static let enabled = "enabled"
         static let pushToken = "push_token"
@@ -63,7 +71,8 @@ public enum AdjustConstants {
         static let revenue = "revenue"
         static let currency = "currency"
         static let orderId = "order_id"
-        static let receipt = "receipt"
+        static let deduplicationId = "deduplication_id"
+        static let deduplicationIdMaxSize = "deduplication_id_max_size"
         static let salesRegion = "sales_region"
         static let purchaseTime = "purchase_time"
         static let callbackId = "callback_id"
@@ -71,11 +80,24 @@ public enum AdjustConstants {
         static let partnerParameters = "partner"
         static let sessionCallbackParameters = "session_callback"
         static let sessionPartnerParameters = "session_partner"
+        static let globalCallbackParameters = "global_callback"
+        static let globalPartnerParameters = "global_partner"
         static let removeSessionCallbackParameters = "remove_session_callback_params"
         static let removeSessionPartnerParameters = "remove_session_partner_params"
+        static let removeGlobalCallbackParameters = "remove_global_callback_params"
+        static let removeGlobalPartnerParameters = "remove_global_partner_params"
         static let adRevenueSource = "ad_revenue_source"
         static let adRevenuePayload = "ad_revenue_payload"
+        static let adRevenueUnit = "unit"
+        static let adRevenueNetwork = "network"
+        static let adRevenueAmount = "amount"
+        static let adRevenueCurrency = "currency"
+        static let adRevenuePlacement = "placement"
+        static let adRevenueImpressionsCount = "impressions_count"
         static let urlStrategy = "url_strategy"
+        static let urlStrategyDomains = "url_strategy_domains"
+        static let urlStrategyUseSubdomains = "url_strategy_use_subdomains"
+        static let urlStrategyIsResidency = "url_strategy_is_residency"
         static let thirdPartySharingOptions = "third_party_sharing_options"
     }
     

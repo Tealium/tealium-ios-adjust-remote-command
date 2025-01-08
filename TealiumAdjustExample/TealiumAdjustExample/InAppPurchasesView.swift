@@ -26,14 +26,15 @@ struct InAppPurchasesView: View {
                                                 "order_total": Double.random(in: 1.0...20.0).round,
                                                 "order_currency": "USD",
                                                 "sales_region": "US",
-                                                "appstore_receipt_data": Data(),
                                                 "customer_id": "cust123",
-                                                "customer_is_member": true,
+                                                "customer_is_member": "true",
                                                 "conversion_value": Int.random(in: 1...12)])
             }
             TextButtonView(title: "Track Ad Revenue") {
                 TealiumHelper.trackEvent(title: "ad_revenue",
                                          data: ["ad_revenue_source": "someAdVendor",
+                                                "ad_revenue_amount": 24,
+                                                "ad_revenue_currency": "USD",
                                                 "campaign": "spring123",
                                                 "ad_uuid": UUID().uuidString])
             }

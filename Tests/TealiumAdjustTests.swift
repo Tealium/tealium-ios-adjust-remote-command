@@ -24,7 +24,7 @@ class TealiumAdjustTests: XCTestCase {
 
     func testInitializeWithConfig_IsCalled() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "test_api_token",
+                                                        "api_token": "testApiToken",
                                                         "sandbox": true])
         XCTAssertEqual(adjInstance.initializeWithAdjustConfigCallCount, 1)
     }
@@ -36,70 +36,73 @@ class TealiumAdjustTests: XCTestCase {
     
     func testInitialize_SetsVariablesOnConfigToDefault_WhenNotInSettings() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "test_api_token",
+                                                        "api_token": "testApiToken",
                                                         "sandbox": true])
         
         // Bug in Adjust SDK: XCTAssertEqual(adjInstance.adjConfig!.logLevel, ADJLogLevelSuppress)
-        XCTAssertFalse(adjInstance.adjConfig!.allowAdServicesInfoReading)
-        XCTAssertFalse(adjInstance.adjConfig!.allowIdfaReading)
-        XCTAssertFalse(adjInstance.adjConfig!.isSKAdNetworkHandlingActive)
+        XCTAssertTrue(adjInstance.adjConfig!.isAdServicesEnabled)
+        XCTAssertTrue(adjInstance.adjConfig!.isIdfaReadingEnabled)
+        XCTAssertTrue(adjInstance.adjConfig!.isSkanAttributionEnabled)
     }
     
     func testInitialize_SetsStandardExpectedVariablesOnConfig_WhenInSettings() {
-        let settings: [String: Any] = [AdjustConstants.Keys.delayStart: 30.0,
-                                       AdjustConstants.Keys.defaultTracker: "testDefaultTracker",
+        let settings: [String: Any] = [AdjustConstants.Keys.defaultTracker: "testDefaultTracker",
                                        AdjustConstants.Keys.externalDeviceId: "testDeviceId",
                                        AdjustConstants.Keys.eventBufferingEnabled: true,
                                        AdjustConstants.Keys.sendInBackground: true,
                                        AdjustConstants.Keys.allowAdServicesInfoReading: true,
                                        AdjustConstants.Keys.allowIdfaReading: true,
-                                       AdjustConstants.Keys.urlStrategy: "url_strategy_china"]
+                                       AdjustConstants.Keys.urlStrategy: "DataResidencyEU",
+                                       AdjustConstants.Keys.deduplicationIdMaxSize: 15]
         
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "test_api_token",
+                                                        "api_token": "testApiToken",
                                                         "sandbox": true,
                                                         "settings": settings])
         
-        XCTAssertEqual(adjInstance.adjConfig!.delayStart, 30.0)
         XCTAssertEqual(adjInstance.adjConfig!.defaultTracker, "testDefaultTracker")
         XCTAssertEqual(adjInstance.adjConfig!.externalDeviceId, "testDeviceId")
-        XCTAssertTrue(adjInstance.adjConfig!.sendInBackground)
-        XCTAssertTrue(adjInstance.adjConfig!.allowAdServicesInfoReading)
-        XCTAssertTrue(adjInstance.adjConfig!.allowIdfaReading)
-        XCTAssertEqual(adjInstance.adjConfig!.urlStrategy, "url_strategy_china")
+        XCTAssertTrue(adjInstance.adjConfig!.isSendingInBackgroundEnabled)
+        XCTAssertTrue(adjInstance.adjConfig!.isAdServicesEnabled)
+        XCTAssertTrue(adjInstance.adjConfig!.isIdfaReadingEnabled)
+        XCTAssertEqual(adjInstance.adjConfig!.urlStrategyDomains as? [String], ["eu.adjust.com"])
+        XCTAssertTrue(adjInstance.adjConfig!.useSubdomains)
+        XCTAssertTrue(adjInstance.adjConfig!.isDataResidency)
+        XCTAssertEqual(adjInstance.adjConfig!.eventDeduplicationIdsMaxSize, 15)
+    }
+
+    func testInitialize_SetsCustomUrlStrategy_WhenInSettings() {
+        let settings: [String: Any] = [
+            AdjustConstants.Keys.urlStrategyDomains: ["customDomain.com"],
+            AdjustConstants.Keys.urlStrategyUseSubdomains: true,
+            AdjustConstants.Keys.urlStrategyIsResidency: true,
+        ]
+        
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
+                                                        "api_token": "testApiToken",
+                                                        "sandbox": true,
+                                                        "settings": settings])
+        
+        XCTAssertEqual(adjInstance.adjConfig!.urlStrategyDomains as? [String], ["customDomain.com"])
+        XCTAssertTrue(adjInstance.adjConfig!.useSubdomains)
+        XCTAssertTrue(adjInstance.adjConfig!.isDataResidency)
     }
     
     func testInitialize_SetsLogLevel() {
         let settings = [AdjustConstants.Keys.logLevel: "assert"]
         
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "h9a5gman7nr4",
+                                                        "api_token": "testApiToken",
                                                         "settings": settings])
         
         // Bug in Adjust SDK: XCTAssertEqual(adjInstance.adjConfig!.logLevel, ADJLogLevelAssert)
     }
     
-    func testInitialize_SetsAppSecret() {
-        let settings = [AdjustConstants.Keys.secretId: 1234,
-                        AdjustConstants.Keys.secretInfoOne: 1,
-                        AdjustConstants.Keys.secretInfoTwo: 2,
-                        AdjustConstants.Keys.secretInfoThree: 3,
-                        AdjustConstants.Keys.secretInfoFour: 4]
-        
-        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "test_api_token",
-                                                        "settings": settings])
-        
-        XCTAssertEqual(adjInstance.adjConfig!.appSecret, "1234")
-        XCTAssertEqual(adjInstance.adjConfig!.secretId, "1234")
-    }
-
-    
     func testInitialize_SetsDelegate() {
         let mockDelegate = MockAdjustDelegateClass()
         adjustRemoteCommand.adjustDelegate = mockDelegate
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "h9a5gman7nr4"])
+                                                        "api_token": "testApiToken"])
         XCTAssertNotNil(adjInstance.adjConfig!.delegate)
     }
     
@@ -107,10 +110,10 @@ class TealiumAdjustTests: XCTestCase {
         let settings = [AdjustConstants.Keys.isSKAdNetworkHandlingActive: 1]
         
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "initialize",
-                                                        "api_token": "h9a5gman7nr4",
+                                                        "api_token": "testApiToken",
                                                         "settings": settings])
         
-        XCTAssertTrue(adjInstance.adjConfig!.isSKAdNetworkHandlingActive)
+        XCTAssertTrue(adjInstance.adjConfig!.isSkanAttributionEnabled)
     }
     
     func testRequestTrackingAuthorizationCalled_WhenCompletionIsSet() {
@@ -128,7 +131,26 @@ class TealiumAdjustTests: XCTestCase {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackevent"])
         XCTAssertEqual(adjInstance.sendEventCallCount, 0)
     }
-    
+
+    func testSendEvent_addsTransactionId_and_DeduplicationId_for_orderId() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackevent",
+                                                        "event_token": "abc123",
+                                                        "order_id": "123"])
+        XCTAssertEqual(adjInstance.sendEventCallCount, 1)
+        XCTAssertEqual(adjInstance.adjEvent?.transactionId, "123")
+        XCTAssertEqual(adjInstance.adjEvent?.deduplicationId, "123")
+    }
+
+    func testSendEvent_deduplication_id_has_priority_over_orderId() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackevent",
+                                                        "event_token": "abc123",
+                                                        "deduplication_id": "456",
+                                                        "order_id": "123"])
+        XCTAssertEqual(adjInstance.sendEventCallCount, 1)
+        XCTAssertEqual(adjInstance.adjEvent?.transactionId, "123")
+        XCTAssertEqual(adjInstance.adjEvent?.deduplicationId, "456")
+    }
+
     func testTrackEvent_DefinesEventWithVariables() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackevent",
                                                         "event_token": "abc123",
@@ -151,8 +173,7 @@ class TealiumAdjustTests: XCTestCase {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "tracksubscription",
                                                         "revenue": 24.33,
                                                         "currency": "USD",
-                                                        "order_id": "ord123",
-                                                        "receipt": Data()])
+                                                        "order_id": "ord123"])
         XCTAssertEqual(adjInstance.trackSubscriptionCallCount, 1)
     }
     
@@ -171,7 +192,7 @@ class TealiumAdjustTests: XCTestCase {
         XCTAssertEqual(adjInstance.trackSubscriptionCallCount, 0)
     }
     
-    func testTrackSubscription_IsNotCalled_WhenNoReceipt() {
+    func testTrackSubscription_IsNotCalled_WhenNoData() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "tracksubscription"])
         XCTAssertEqual(adjInstance.trackSubscriptionCallCount, 0)
     }
@@ -182,7 +203,6 @@ class TealiumAdjustTests: XCTestCase {
                                                         "revenue": 24.33,
                                                         "currency": "USD",
                                                         "order_id": "ord123",
-                                                        "receipt": Data(),
                                                         "purchase_time": 1415639000,
                                                         "sales_region": "US",
                                                         "callback": ["foo": "bar"],
@@ -190,7 +210,6 @@ class TealiumAdjustTests: XCTestCase {
         XCTAssertEqual(adjInstance.adjSubscription?.price, 24.33)
         XCTAssertEqual(adjInstance.adjSubscription?.currency, "USD")
         XCTAssertEqual(adjInstance.adjSubscription?.transactionId, "ord123")
-        XCTAssertNotNil(adjInstance.adjSubscription?.receipt)
         XCTAssertNotNil(adjInstance.adjSubscription?.transactionDate)
         XCTAssertTrue(adjInstance.adjSubscription!.callbackParameters.equal(to: ["foo": "bar"]))
         XCTAssertTrue(adjInstance.adjSubscription!.partnerParameters.equal(to: ["fizz": "buzz"]))
@@ -220,22 +239,53 @@ class TealiumAdjustTests: XCTestCase {
     
     func testTrackAdRevenue_IsCalled() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackadrevenue",
-                                                        "ad_revenue_source": "testSource",
-                                                        "ad_revenue_payload": ["fan": "ban"]])
+                                                        "ad_revenue_source": "testSource"])
         XCTAssertEqual(adjInstance.trackAdRevenueCallCount, 1)
     }
     
     func testTrackAdRevenue_IsNotCalled_WhenNoSource() {
-        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackadrevenue",
-                                                        "ad_revenue_payload": ["fan": "ban"]])
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackadrevenue"])
         XCTAssertEqual(adjInstance.trackAdRevenueCallCount, 0)
+    }
+
+    func testTrackAdRevenue_addsPayload() {
+        adjustRemoteCommand.processRemoteCommand(with: [
+            "command_name": "trackadrevenue",
+            "ad_revenue_source": "testSource",
+            "ad_revenue_payload": [
+                "impressions_count": 3,
+                "amount": 24,
+                "currency": "testCurrency",
+                "network": "testNetwork",
+                "placement": "testPlacement",
+                "unit": "testAdUnit",
+                "callback": [
+                    "key_callback1": "value1",
+                    "key_callback2": "value2"
+                ],
+                "partner": [
+                    "key_parameter1": "value1",
+                    "key_parameter2": "value2"
+                ]
+            ]
+        ])
+        XCTAssertEqual(adjInstance.adRevenue?.adImpressionsCount, 3)
+        XCTAssertEqual(adjInstance.adRevenue?.source, "testSource")
+        XCTAssertEqual(adjInstance.adRevenue?.revenue, 24)
+        XCTAssertEqual(adjInstance.adRevenue?.currency, "testCurrency")
+        XCTAssertEqual(adjInstance.adRevenue?.adRevenueNetwork, "testNetwork")
+        XCTAssertEqual(adjInstance.adRevenue?.adRevenuePlacement, "testPlacement")
+        XCTAssertEqual(adjInstance.adRevenue?.adRevenueUnit, "testAdUnit")
+        XCTAssertEqual(adjInstance.adRevenue?.callbackParameters as? [String: String], [
+            "key_callback1": "value1",
+            "key_callback2": "value2"
+        ])
+        XCTAssertEqual(adjInstance.adRevenue?.partnerParameters as? [String: String], [
+            "key_parameter1": "value1",
+            "key_parameter2": "value2"
+        ])
     }
     
-    func testTrackAdRevenue_IsNotCalled_WhenNoPayload() {
-        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackadrevenue",
-                                                        "ad_revenue_source": "testSource"])
-        XCTAssertEqual(adjInstance.trackAdRevenueCallCount, 0)
-    }
     
     func testSetPushToken_IsCalled() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "setpushtoken",
@@ -308,63 +358,97 @@ class TealiumAdjustTests: XCTestCase {
         XCTAssertEqual(adjInstance.trackMeasurementConsentCallCount, 1)
     }
     
-    func testTrackMeasurementConsent_IsNotCalled_WhenNoEnabledFlag() {
+    func testTrackMeasurementConsent_IsNotCalled_WhenNoParameters() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "trackmeasurementconsent"])
         XCTAssertEqual(adjInstance.trackMeasurementConsentCallCount, 0)
     }
     
-    func testAddSessionCallbackParams_IsCalled() {
+    func testAddGlobalCallbackParams_IsCalled_With_SessionCallback() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "addsessioncallbackparams",
                                                         "session_callback": ["fin": "bin"]])
-        XCTAssertEqual(adjInstance.addSessionCallbackParamsCallCount, 1)
+        XCTAssertEqual(adjInstance.addGlobalCallbackParamsCallCount, 1)
     }
-    
-    func testAddSessionCallbackParams_IsNotCalled_WhenNoEnabledFlag() {
+
+    func testAddGlobalCallbackParams_IsCalled_With_GlobalCallback() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "addglobalcallbackparams",
+                                                        "global_callback": ["fin": "bin"]])
+        XCTAssertEqual(adjInstance.addGlobalCallbackParamsCallCount, 1)
+    }
+
+    func testAddGlobalCallbackParams_IsNotCalled_WhenNoParameters() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "addsessioncallbackparams"])
-        XCTAssertEqual(adjInstance.addSessionCallbackParamsCallCount, 0)
+        XCTAssertEqual(adjInstance.addGlobalCallbackParamsCallCount, 0)
     }
     
-    func testRemoveSessionCallbackParams_IsCalled() {
+    func testRemoveGlobalCallbackParams_IsCalled_With_RemoveSessionCallback() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "removesessioncallbackparams",
                                                         "remove_session_callback_params": ["fin"]])
-        XCTAssertEqual(adjInstance.removeSessionCallbackParamsCallCount, 1)
+        XCTAssertEqual(adjInstance.removeGlobalCallbackParamsCallCount, 1)
     }
     
-    func testRemoveSessionCallbackParams_IsNotCalled_WhenNoEnabledFlag() {
+    func testRemoveGlobalCallbackParams_IsCalled_With_RemoveGlobalCallback() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "removeglobalcallbackparams",
+                                                        "remove_global_callback_params": ["fin"]])
+        XCTAssertEqual(adjInstance.removeGlobalCallbackParamsCallCount, 1)
+    }
+    
+    func testRemoveGlobalCallbackParams_IsNotCalled_WhenNoParameters() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "removesessioncallbackparams"])
-        XCTAssertEqual(adjInstance.removeSessionCallbackParamsCallCount, 0)
+        XCTAssertEqual(adjInstance.removeGlobalCallbackParamsCallCount, 0)
     }
     
-    func testResetSessionCallbackParams_IsCalled() {
+    func testResetGlobalCallbackParams_IsCalled_With_SessionCommand() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "resetsessioncallbackparams"])
-        XCTAssertEqual(adjInstance.resetSessionCallbackParamsCallCount, 1)
+        XCTAssertEqual(adjInstance.resetGlobalCallbackParamsCallCount, 1)
     }
     
-    func testAddSessionPartnerParams_IsCalled() {
+    func testResetGlobalCallbackParams_IsCalled_With_GlobalCommand() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "resetglobalcallbackparams"])
+        XCTAssertEqual(adjInstance.resetGlobalCallbackParamsCallCount, 1)
+    }
+    
+    func testAddGlobalPartnerParams_IsCalled_With_SessionPartner() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "addsessionpartnerparams",
                                                         "session_partner": ["fin": "bin"]])
-        XCTAssertEqual(adjInstance.addSessionPartnerParamsCallCount, 1)
+        XCTAssertEqual(adjInstance.addGlobalPartnerParamsCallCount, 1)
     }
     
-    func testAddSessionPartnerParams_IsNotCalled_WhenNoEnabledFlag() {
+    func testAddGlobalPartnerParams_IsCalled_With_GlobalPartner() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "addglobalpartnerparams",
+                                                        "global_partner": ["fin": "bin"]])
+        XCTAssertEqual(adjInstance.addGlobalPartnerParamsCallCount, 1)
+    }
+    
+    func testAddGlobalPartnerParams_IsNotCalled_WhenNoParameters() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "addsessionpartnerparams"])
-        XCTAssertEqual(adjInstance.addSessionPartnerParamsCallCount, 0)
+        XCTAssertEqual(adjInstance.addGlobalPartnerParamsCallCount, 0)
     }
     
-    func testRemoveSessionPartnerParams_IsCalled() {
+    func testRemoveGlobalPartnerParams_IsCalled_With_RemoveSessionPartner() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "removesessionpartnerparams",
                                                         "remove_session_partner_params": ["fin"]])
-        XCTAssertEqual(adjInstance.removeSessionPartnerParamsCallCount, 1)
+        XCTAssertEqual(adjInstance.removeGlobalPartnerParamsCallCount, 1)
     }
     
-    func testRemoveSessionPartnerParams_IsNotCalled_WhenNoEnabledFlag() {
+    func testRemoveGlobalPartnerParams_IsCalled_With_RemoveGlobalPartner() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "removeglobalpartnerparams",
+                                                        "remove_global_partner_params": ["fin"]])
+        XCTAssertEqual(adjInstance.removeGlobalPartnerParamsCallCount, 1)
+    }
+    
+    func testRemoveGlobalPartnerParams_IsNotCalled_WhenNoParameters() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "removesessionpartnerparams"])
-        XCTAssertEqual(adjInstance.removeSessionPartnerParamsCallCount, 0)
+        XCTAssertEqual(adjInstance.removeGlobalPartnerParamsCallCount, 0)
     }
     
-    func testResetSessionPartnerParams_IsCalled() {
+    func testResetGlobalPartnerParams_IsCalled_With_SessionCommand() {
         adjustRemoteCommand.processRemoteCommand(with: ["command_name": "resetsessionpartnerparams"])
-        XCTAssertEqual(adjInstance.resetSessionPartnerParamsCallCount, 1)
+        XCTAssertEqual(adjInstance.resetGlobalPartnerParamsCallCount, 1)
+    }
+    
+    func testResetGlobalPartnerParams_IsCalled_With_GlobalCommand() {
+        adjustRemoteCommand.processRemoteCommand(with: ["command_name": "resetglobalpartnerparams"])
+        XCTAssertEqual(adjInstance.resetGlobalPartnerParamsCallCount, 1)
     }
     
 }
