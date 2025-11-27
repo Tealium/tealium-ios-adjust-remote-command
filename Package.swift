@@ -10,14 +10,14 @@ let package = Package(
         .library(name: "TealiumAdjust", targets: ["TealiumAdjust"])
     ],
     dependencies: [
-        .package(name: "TealiumSwift", url: "https://github.com/tealium/tealium-swift", .upToNextMajor(from: "2.14.0")),
-        .package(name: "AdjustSDK", url: "https://github.com/adjust/ios_sdk", .upToNextMajor(from: "5.0.1"))
+        .package(name: "TealiumSwift", url: "https://github.com/tealium/tealium-swift", .upToNextMajor(from: "2.18.1")),
+        .package(name: "AdjustSdk", url: "https://github.com/adjust/ios_sdk", .upToNextMajor(from: "5.0.1"))
     ],
     targets: [
         .target(
             name: "TealiumAdjust",
             dependencies: [
-                .product(name: "AdjustSDK", package: "AdjustSDK"),
+                .product(name: "AdjustSdk", package: "AdjustSdk"),
                 .product(name: "TealiumCore", package: "TealiumSwift"),
                 .product(name: "TealiumRemoteCommands", package: "TealiumSwift")
             ],

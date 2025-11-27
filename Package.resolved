@@ -2,12 +2,48 @@
   "object": {
     "pins": [
       {
-        "package": "Adjust",
+        "package": "AdjustSignature",
+        "repositoryURL": "https://github.com/adjust/adjust_signature_sdk.git",
+        "state": {
+          "branch": null,
+          "revision": "b11c73304c2410bd410cc9369b812a83cc117002",
+          "version": "3.61.0"
+        }
+      },
+      {
+        "package": "GoogleAdsOnDeviceConversion",
+        "repositoryURL": "https://github.com/googleads/google-ads-on-device-conversion-ios-sdk.git",
+        "state": {
+          "branch": null,
+          "revision": "35b601a60fbbea2de3ea461f604deaaa4d8bbd0c",
+          "version": "3.2.0"
+        }
+      },
+      {
+        "package": "GoogleUtilities",
+        "repositoryURL": "https://github.com/google/GoogleUtilities.git",
+        "state": {
+          "branch": null,
+          "revision": "60da361632d0de02786f709bdc0c4df340f7613e",
+          "version": "8.1.0"
+        }
+      },
+      {
+        "package": "AdjustSdk",
         "repositoryURL": "https://github.com/adjust/ios_sdk",
         "state": {
           "branch": null,
-          "revision": "43c5bb5eb8f77c72da856637dac5c46087c27848",
-          "version": "4.29.6"
+          "revision": "fbe95360df63c3c0f9a98c5f2efb39b46bd2f08d",
+          "version": "5.4.6"
+        }
+      },
+      {
+        "package": "nanopb",
+        "repositoryURL": "https://github.com/firebase/nanopb.git",
+        "state": {
+          "branch": null,
+          "revision": "b7e1104502eca3a213b46303391ca4d3bc8ddec1",
+          "version": "2.30910.0"
         }
       },
       {
@@ -15,8 +51,8 @@
         "repositoryURL": "https://github.com/tealium/tealium-swift",
         "state": {
           "branch": null,
-          "revision": "9bd74f09c780862de61101bd147b1c6b232f98ce",
-          "version": "2.5.1"
+          "revision": "5fcf56ae3f4eb89082f4696a21c94c4044421a32",
+          "version": "2.18.1"
         }
       }
     ]
